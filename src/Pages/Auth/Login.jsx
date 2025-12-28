@@ -56,34 +56,7 @@ const Login = () => {
         layout="vertical"
         className="flex flex-col gap-4"
       >
-        <Form.Item
-          name="email"
-          label={<p>Email</p>}
-          rules={[
-            { required: true, message: "Please enter your email" },
-            {
-              validator: (_, value) => {
-                if (!value) return Promise.resolve();
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(value)) {
-                  return Promise.reject(
-                    new Error("Please enter a valid email address")
-                  );
-                }
-                return Promise.resolve();
-              },
-            },
-          ]}
-        >
-          <Input
-            placeholder="Enter your email"
-            style={{
-              height: 45,
-              border: "1px solid #3FAE6A",
-              borderRadius: "200px",
-            }}
-          />
-        </Form.Item>
+        <FormItem name={"email"} label={"Phone/Email"} />
 
         <Form.Item
           name="password"

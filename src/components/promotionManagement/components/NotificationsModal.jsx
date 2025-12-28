@@ -131,6 +131,16 @@ const NotificationsModal = ({ visible, onCancel }) => {
 
   const handleSendNotification = async (values) => {
     try {
+      // Validate required fields
+      if (!values.segment) {
+        message.error("Please select a customer segment");
+        return;
+      }
+      if (!values.additionalInfo) {
+        message.error("Please enter a message");
+        return;
+      }
+
       // Create FormData for file upload
       const formData = new FormData();
 
@@ -143,11 +153,16 @@ const NotificationsModal = ({ visible, onCancel }) => {
         all_customer: "all_customer",
       };
 
-      // Append fields - send numbers as numbers by parsing first
-      formData.append("segment", segmentMap[values.segment] || values.segment);
-      formData.append("minPoints", parseInt(values.points || 0, 10));
-      formData.append("radiusKm", parseInt(values.radius || 10, 10));
-      formData.append("message", values.additionalInfo || "");
+      // Create data object with notification data
+      const notificationData = {
+        message: values.additionalInfo,
+        minPoints: parseInt(values.points || 0, 10),
+        segment: segmentMap[values.segment] || values.segment,
+        radius: parseInt(values.radius || 50000, 10),
+      };
+
+      // Append data as JSON string
+      formData.append("data", JSON.stringify(notificationData));
 
       // Add image as binary if uploaded
       if (uploadedImage.length > 0) {

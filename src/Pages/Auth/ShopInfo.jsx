@@ -69,9 +69,9 @@ const ShopInfo = () => {
       }
     });
 
-    const logoFile = values.logo?.[0]?.originFileObj;
+    const logoFile = values.profile?.[0]?.originFileObj;
     if (logoFile) {
-      formData.append("image", logoFile);
+      formData.append("profile", logoFile);
     }
 
     try {
@@ -254,9 +254,16 @@ const ShopInfo = () => {
 
         {/* Upload Logo */}
         <Form.Item
-          name="logo"
+          name="profile"
           rules={[{ required: true, message: "Please upload your logo" }]}
           style={{ marginBottom: 24 }}
+          valuePropName="fileList"
+          getValueFromEvent={(e) => {
+            if (Array.isArray(e)) {
+              return e;
+            }
+            return e?.fileList;
+          }}
         >
           <Upload
             beforeUpload={() => false}

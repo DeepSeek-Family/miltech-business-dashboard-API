@@ -73,7 +73,7 @@ export const customerApi = api.injectEndpoints({
     // ---------------------------------------
     sendNotification: builder.mutation({
       query: (formData) => ({
-        url: `/promo-merchant/send-notification`,
+        url: `/push-notification/merchant/notify`,
         method: "POST",
         body: formData,
       }),
