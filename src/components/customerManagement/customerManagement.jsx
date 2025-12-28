@@ -173,9 +173,9 @@ const CustomerManagement = () => {
       align: "center",
       render: (sales) => {
         if (typeof sales === "number") {
-          return `$${sales.toFixed(2)}`;
+          return `${sales.toFixed(2)}`;
         }
-        return `$${sales || 0}`;
+        return `${sales || 0}`;
       },
     },
     { title: "Status", dataIndex: "status", key: "status", align: "center" },
