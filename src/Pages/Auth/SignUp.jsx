@@ -24,7 +24,9 @@ const SignUp = () => {
       navigate(
         `/auth/otp-verification?phone=${encodeURIComponent(
           values.phone
-        )}&email=${encodeURIComponent(values.email)}`
+        )}&email=${encodeURIComponent(values.email)}&type=${encodeURIComponent(
+          "signup"
+        )}`
       );
     } catch (err) {
       const errorMsg = err?.data?.message || "Registration failed";
@@ -138,17 +140,24 @@ const SignUp = () => {
               validator(_, value) {
                 if (!value) return Promise.resolve();
 
-                const hasLetter = /[a-zA-Z]/.test(value);
+                const hasUpperCase = /[A-Z]/.test(value);
+                const hasLowerCase = /[a-z]/.test(value);
                 const hasNumber = /\d/.test(value);
                 const hasSpecialChar =
                   /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value);
 
-                if (hasLetter && hasNumber && hasSpecialChar) {
+                if (
+                  hasUpperCase &&
+                  hasLowerCase &&
+                  hasNumber &&
+                  hasSpecialChar
+                ) {
                   return Promise.resolve();
                 }
 
                 const missing = [];
-                if (!hasLetter) missing.push("letter");
+                if (!hasUpperCase) missing.push("uppercase letter");
+                if (!hasLowerCase) missing.push("lowercase letter");
                 if (!hasNumber) missing.push("number");
                 if (!hasSpecialChar) missing.push("special character");
 

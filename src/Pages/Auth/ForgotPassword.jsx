@@ -1,14 +1,31 @@
-import { Button, Form, Input } from "antd";
-import React from "react";
+import { Button, Form, Input, message } from "antd";
+import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import keyIcon from "../../assets/key.png";
-import { ArrowLeft } from "lucide-react";
+import { useForgotPasswordMutation } from "../../redux/apiSlices/authSlice";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
 
+  const [forgotPassword, { isLoading: isSending }] =
+    useForgotPasswordMutation();
+
   const onFinish = async (values) => {
-    navigate(`/auth/verify-otp?email=${values?.email}`);
+    try {
+      const payload = { phone: values?.phone };
+      const res = await forgotPassword(payload).unwrap();
+      // Optionally, check res.success or server message
+      message.success(res?.message || "OTP sent to your phone");
+      navigate(
+        `/auth/otp-verification?phone=${encodeURIComponent(values?.phone)}`
+      );
+    } catch (err) {
+      const errMsg =
+        err?.data?.message ||
+        err?.message ||
+        "Failed to send reset instructions";
+      message.error(errMsg);
+    }
   };
 
   return (
@@ -23,20 +40,20 @@ const ForgotPassword = () => {
 
       <Form layout="vertical" onFinish={onFinish}>
         <Form.Item
-          label={<p>Email</p>}
-          name="email"
-          id="email"
+          label={<p>Phone Number</p>}
+          name="phone"
+          id="phone"
           rules={[
             {
               required: true,
-              message: "Please input your email!",
+              message: "Please input your phone!",
             },
           ]}
         >
           <Input
-            placeholder="Enter your email address"
+            placeholder="Enter your phone address"
             style={{
-              height: 40,
+              height: 45,
               border: "1px solid #d9d9d9",
               outline: "none",
               boxShadow: "none",
@@ -46,29 +63,29 @@ const ForgotPassword = () => {
           />
         </Form.Item>
 
-        <Form.Item className="mt-4">
-          <button
+        <Form.Item>
+          <Button
+            type="primary"
             htmlType="submit"
-            type="submit"
+            block
+            loading={isSending}
             style={{
-              width: "100%",
               height: 45,
-              color: "white",
-              fontWeight: "400px",
-              fontSize: "18px",
-              borderRadius: "200px",
+              fontWeight: 400,
+              fontSize: 18,
+              borderRadius: 200,
               marginTop: 20,
             }}
-            className="flex items-center justify-center bg-[#3FAE6A] rounded-lg"
+            className="flex items-center justify-center bg-primary rounded-lg"
           >
             Submit
-          </button>
+          </Button>
         </Form.Item>
       </Form>
       <div className="">
         <Link
           to="/auth/login"
-          className="flex items-center justify-center gap-1 text-[#667085] hover:text-[#3FAE6A] text-center mt-4"
+          className="flex items-center justify-center gap-1 text-[#667085] hover:text-primary text-center mt-4"
         >
           <ArrowLeft size={20} />
           <p>Back to log in</p>

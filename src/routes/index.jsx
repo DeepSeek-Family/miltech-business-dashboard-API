@@ -10,7 +10,7 @@ import ResetSuccess from "../Pages/Auth/ResetSuccess";
 import SetPassword from "../Pages/Auth/SetPassword";
 import VerifyOtp from "../Pages/Auth/VerifyOtp";
 import Notifications from "../Pages/Dashboard/Notifications";
-import OtpVerification from "../Pages/Auth/OtpVerification";
+// import OtpVerification from "../Pages/Auth/OtpVerification";
 import AdminProfile from "../Pages/Dashboard/AdminProfile/AdminProfile";
 import Home from "../Pages/Dashboard/Home";
 import CustomerManagement from "../components/customerManagement/customerManagement";
@@ -111,10 +111,10 @@ const router = createBrowserRouter([
         path: "forgot-password",
         element: <ForgotPassword />,
       },
-      {
-        path: "verify-otp",
-        element: <VerifyOtp />,
-      },
+      // {
+      //   path: "verify-otp",
+      //   element: <VerifyOtp />,
+      // },
       {
         path: "reset-success",
         element: <ResetSuccess />,
@@ -129,7 +129,7 @@ const router = createBrowserRouter([
       },
       {
         path: "otp-verification",
-        element: <OtpVerification />,
+        element: <VerifyOtp />,
       },
       {
         path: "shop-info",

@@ -79,7 +79,7 @@ const DetailsModal = ({
                   <strong>Location:</strong> {selectedRecord.location}
                 </p>
                 <p>
-                  <strong>Total Sales:</strong> {" "}
+                  <strong>Total Sales:</strong>{" "}
                   {selectedRecord.sales.toFixed
                     ? selectedRecord.sales.toFixed(2)
                     : selectedRecord.sales}

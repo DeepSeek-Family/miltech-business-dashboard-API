@@ -43,6 +43,7 @@ export const authApi = api.injectEndpoints({
         },
       }),
       transformResponse: (data) => data,
+      
       invalidatesTags: ["Profile"],
     }),
 
