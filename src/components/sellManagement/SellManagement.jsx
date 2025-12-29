@@ -222,36 +222,36 @@ const SellManagement = () => {
         );
       },
     },
-    {
-      title: "Actions",
-      key: "actions",
-      align: "center",
-      width: 80,
-      render: (_, record) => (
-        <div
-          className="flex gap-2 justify-between align-middle py-[7px] px-[15px] border border-primary rounded-md"
-          style={{ alignItems: "center" }}
-        >
-          <Tooltip title="Edit">
-            <button
-              onClick={() => handleEdit(record)}
-              className="text-primary hover:text-green-700 text-[17px]"
-            >
-              <FaEdit />
-            </button>
-          </Tooltip>
-          <Tooltip title="Delete">
-            <Button
-              type="danger"
-              size="small"
-              onClick={() => handleDelete(record.id)}
-            >
-              <FaTrash className="text-red-600" />
-            </Button>
-          </Tooltip>
-        </div>
-      ),
-    },
+    // {
+    //   title: "Actions",
+    //   key: "actions",
+    //   align: "center",
+    //   width: 80,
+    //   render: (_, record) => (
+    //     <div
+    //       className="flex gap-2 justify-between align-middle py-[7px] px-[15px] border border-primary rounded-md"
+    //       style={{ alignItems: "center" }}
+    //     >
+    //       <Tooltip title="Edit">
+    //         <button
+    //           onClick={() => handleEdit(record)}
+    //           className="text-primary hover:text-green-700 text-[17px]"
+    //         >
+    //           <FaEdit />
+    //         </button>
+    //       </Tooltip>
+    //       <Tooltip title="Delete">
+    //         <Button
+    //           type="danger"
+    //           size="small"
+    //           onClick={() => handleDelete(record.id)}
+    //         >
+    //           <FaTrash className="text-red-600" />
+    //         </Button>
+    //       </Tooltip>
+    //     </div>
+    //   ),
+    // },
   ];
 
   if (isNewSellPage) {

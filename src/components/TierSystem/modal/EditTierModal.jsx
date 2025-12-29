@@ -77,10 +77,10 @@ const EditTierModal = ({
           name="reward"
           rules={[{ required: true, message: "Please enter reward" }]}
         >
-          <Input className="mli-tall-input" />
+          <Input type="number" className="mli-tall-input" />
         </Form.Item>
         <Form.Item
-          label="Point accumulation rule"
+          label="Point accumulation rule (%)"
           name="lockoutDuration"
           rules={[
             { required: true, message: "Please enter rule" },
@@ -93,15 +93,17 @@ const EditTierModal = ({
                     new Error("Please enter a valid number")
                   );
                 }
-                if (numValue < 0) {
-                  return Promise.reject(new Error("Value cannot be negative"));
+                if (numValue < 0 || numValue > 100) {
+                  return Promise.reject(
+                    new Error("Value must be between 0 and 100")
+                  );
                 }
                 return Promise.resolve();
               },
             },
           ]}
         >
-          <Input type="number" className="mli-tall-input" min="0" />
+          <Input type="number" className="mli-tall-input" min="0" max="100" />
         </Form.Item>
         <Form.Item
           label="Point redemption rule"
@@ -120,17 +122,12 @@ const EditTierModal = ({
                 if (numValue < 0) {
                   return Promise.reject(new Error("Value cannot be negative"));
                 }
-                if (numValue === 0) {
-                  return Promise.reject(
-                    new Error("Value must be greater than 0")
-                  );
-                }
                 return Promise.resolve();
               },
             },
           ]}
         >
-          <Input type="number" className="mli-tall-input" min="1" />
+          <Input type="number" className="mli-tall-input" min="0" />
         </Form.Item>
         <Form.Item
           label="Min Total Spend ($)"

@@ -252,7 +252,7 @@ const CustomerManagement = () => {
         {/* Search Bar */}
         <div className="mb-4 flex gap-4">
           <Input
-            placeholder="Search by Customer ID, Name, Phone or Email"
+            placeholder="Search by Customer ID, Name, Location or Sales Rep"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             className="w-96"

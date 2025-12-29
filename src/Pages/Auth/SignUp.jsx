@@ -29,8 +29,11 @@ const SignUp = () => {
         )}`
       );
     } catch (err) {
-      const errorMsg = err?.data?.message || "Registration failed";
+      const errorMsg =
+        err?.data?.errorMessages[0]?.message || "Registration failed";
       message.error(errorMsg);
+
+      console.log(err);
     }
   };
 
