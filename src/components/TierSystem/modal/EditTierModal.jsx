@@ -130,7 +130,7 @@ const EditTierModal = ({
           <Input type="number" className="mli-tall-input" min="0" />
         </Form.Item>
         <Form.Item
-          label="Min Total Spend ($)"
+          label="Min Total Spend"
           name="minSpend"
           rules={[
             { required: true, message: "Please enter min spend" },

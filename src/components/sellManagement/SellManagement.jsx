@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Select, Input, Button, Tooltip, message, Form, Modal } from "antd";
+import {
+  Select,
+  Input,
+  Button,
+  Tooltip,
+  message,
+  Form,
+  Modal,
+  Tag,
+} from "antd";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import NewSell from "./components/NewSell";
 import CustomTable from "../common/CustomTable";
@@ -211,14 +220,14 @@ const SellManagement = () => {
       align: "center",
       render: (status) => {
         const statusColors = {
-          completed: "text-green-600 font-semibold",
-          pending: "text-orange-600 font-semibold",
-          failed: "text-red-600 font-semibold",
+          completed: "green",
+          pending: "orange",
+          failed: "red",
         };
         return (
-          <span className={statusColors[status?.toLowerCase()] || ""}>
+          <Tag color={statusColors[status?.toLowerCase()] || "default"}>
             {status}
-          </span>
+          </Tag>
         );
       },
     },

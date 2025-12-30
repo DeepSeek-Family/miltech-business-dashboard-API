@@ -97,18 +97,54 @@ const AddNewUserModal = ({
             placeholder="e.g., +1 (555) 123-4567"
           />
         </Form.Item>
-        <Form.Item
-          name="password"
-          label="Password"
-          rules={[
-            {
-              required: !editingUser,
-              message: "Please enter password",
-            },
-          ]}
-        >
-          <Input.Password className="mli-tall-input" />
-        </Form.Item>
+        {!editingUser && (
+          <Form.Item
+            name="password"
+            label="Password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your new Password!",
+              },
+              {
+                validator(_, value) {
+                  if (!value) return Promise.resolve();
+
+                  const hasUpperCase = /[A-Z]/.test(value);
+                  const hasLowerCase = /[a-z]/.test(value);
+                  const hasNumber = /\d/.test(value);
+                  const hasSpecialChar =
+                    /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value);
+
+                  if (
+                    hasUpperCase &&
+                    hasLowerCase &&
+                    hasNumber &&
+                    hasSpecialChar
+                  ) {
+                    return Promise.resolve();
+                  }
+
+                  const missing = [];
+                  if (!hasUpperCase) missing.push("uppercase letter");
+                  if (!hasLowerCase) missing.push("lowercase letter");
+                  if (!hasNumber) missing.push("number");
+                  if (!hasSpecialChar) missing.push("special character");
+
+                  return Promise.reject(
+                    new Error(
+                      `Password must contain at least one ${missing.join(
+                        ", one "
+                      )}`
+                    )
+                  );
+                },
+              },
+            ]}
+          >
+            <Input.Password className="mli-tall-input" />
+          </Form.Item>
+        )}
         <Form.Item
           name="role"
           label="Role"
