@@ -143,7 +143,7 @@ const VerifyOtp = () => {
         <p className="mx-auto text-base text-[#667085]">
           We sent a 6-digit code to {phone || "your phone"}
         </p>
-        <p
+        {/* <p
           className={`text-sm mt-2 font-semibold ${
             isExpired ? "text-red-500" : "text-[#3FAE6A]"
           }`}
@@ -155,7 +155,7 @@ const VerifyOtp = () => {
           <p className="text-red-500 text-sm mt-2">
             OTP has expired. Please request a new one.
           </p>
-        )}
+        )} */}
       </div>
       <Form layout="vertical">
         <Form.Item>

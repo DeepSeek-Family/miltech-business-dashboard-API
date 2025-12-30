@@ -412,7 +412,8 @@ const PromotionManagement = () => {
             <Tooltip title="Edit">
               <button
                 onClick={() => handleEditClick(record)}
-                className="text-primary hover:text-green-700 text-[17px]"
+                className="text-primary hover:text-green-700 text-[17px] disabled:text-gray-400 disabled:cursor-not-allowed disabled:hover:text-gray-400"
+                disabled={record.status === "Inactive"}
               >
                 <FaEdit />
               </button>

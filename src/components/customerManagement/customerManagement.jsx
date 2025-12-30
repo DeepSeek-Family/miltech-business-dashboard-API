@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
-import { Button, Modal, Input, Tooltip, Table } from "antd";
+import { Button, Modal, Input, Tooltip, Table, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import MarchantIcon from "../../assets/marchant.png";
 import { Rate } from "antd";
 import CustomTable from "../common/CustomTable";
 import DetailsModal from "./components/DetailsModal";
-import { useGetCustomersQuery } from "../../redux/apiSlices/selleManagementSlice";
+import {
+  useGetCustomersQuery,
+  useLazyExportCustomersQuery,
+} from "../../redux/apiSlices/selleManagementSlice";
 
 const CustomerManagement = () => {
   const [data, setData] = useState([]);
@@ -26,6 +29,36 @@ const CustomerManagement = () => {
     page: pagination.current,
     limit: pagination.pageSize,
   });
+
+  // Export customers
+  const [triggerExport, { isLoading: isExportLoading }] =
+    useLazyExportCustomersQuery();
+
+  const handleExportCustomers = async () => {
+    try {
+      const result = await triggerExport([]);
+
+      if (result.data) {
+        // Create a blob URL and trigger download
+        const blob = result.data;
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+
+        // Generate filename with current date
+        const dateStr = new Date().toISOString().split("T")[0];
+        link.download = `customers-export-${dateStr}.xlsx`;
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error("Export failed:", error);
+      message.error("Failed to export customers");
+    }
+  };
 
   // Update local data when API data changes
   useEffect(() => {
@@ -259,7 +292,8 @@ const CustomerManagement = () => {
           />
           <Button
             className="bg-primary px-8 py-5 rounded-full text-white hover:text-secondary text-[17px] font-bold"
-            // onClick={exportToCSV}
+            onClick={handleExportCustomers}
+            loading={isExportLoading}
           >
             Export
           </Button>

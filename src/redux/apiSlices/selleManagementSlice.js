@@ -97,6 +97,18 @@ export const selleManagementApi = api.injectEndpoints({
       transformResponse: (response) => response,
       providesTags: ["sellManagement"],
     }),
+
+    // ---------------------------------------
+    // GET export customers as Excel
+    // ---------------------------------------
+    exportCustomers: builder.query({
+      query: () => ({
+        url: `/sell/customer/export`,
+        method: "GET",
+        responseHandler: (response) => response.blob(),
+      }),
+      transformResponse: (response) => response,
+    }),
   }),
 });
 
@@ -109,4 +121,5 @@ export const {
   useCheckoutTransactionMutation,
   useGetUserTransactionsQuery,
   useGetCustomerTierQuery,
+  useLazyExportCustomersQuery,
 } = selleManagementApi;

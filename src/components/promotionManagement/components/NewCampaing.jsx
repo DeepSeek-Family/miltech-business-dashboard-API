@@ -156,6 +156,14 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
     form.setFieldsValue({ promotionDays: newCheckedDays });
   };
 
+  const handleDaysChange = (checkedValues) => {
+    form.setFieldsValue({ promotionDays: checkedValues });
+    // Uncheck "All days" if not all days are selected
+    const allDays = daysOptions.map((day) => day.value);
+    const isAllSelected = checkedValues.length === allDays.length;
+    setCheckAll(isAllSelected);
+  };
+
   return (
     <div>
       <h2 className="text-lg font-bold mb-4">
@@ -299,7 +307,11 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
               { required: true, message: "Please select at least one day" },
             ]}
           >
-            <Checkbox.Group options={daysOptions} className="flex gap-2" />
+            <Checkbox.Group
+              options={daysOptions}
+              onChange={handleDaysChange}
+              className="flex gap-2"
+            />
           </Form.Item>
         </div>
 
