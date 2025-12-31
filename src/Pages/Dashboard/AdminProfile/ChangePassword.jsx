@@ -61,7 +61,7 @@ const ChangePassword = () => {
                   placeholder="Enter Password"
                   type="password"
                   style={{
-                    // border: "1px solid #E0E4EC",
+                    border: "1px solid #d8d8d8",
                     height: "45px",
                     background: "white",
                     borderRadius: "8px",
@@ -106,7 +106,7 @@ const ChangePassword = () => {
                   type="password"
                   placeholder="Enter password"
                   style={{
-                    // border: "1px solid #E0E4EC",
+                    border: "1px solid #d8d8d8",
                     height: "45px",
                     background: "white",
                     borderRadius: "8px",
@@ -146,7 +146,7 @@ const ChangePassword = () => {
                   type="password"
                   placeholder="Enter password"
                   style={{
-                    // border: "1px solid #E0E4EC",
+                    border: "1px solid #d8d8d8",
                     height: "45px",
                     background: "white",
                     borderRadius: "8px",

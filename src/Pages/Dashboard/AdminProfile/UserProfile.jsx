@@ -248,9 +248,17 @@ const UserProfile = () => {
                 maxCount={1}
               >
                 {imageUrl ? (
-                  <Avatar size={100} src={imageUrl} />
+                  <Avatar
+                    size={100}
+                    src={imageUrl}
+                    style={{ borderRadius: "8px" }}
+                  />
                 ) : (
-                  <Avatar size={100} icon={<UploadOutlined />} />
+                  <Avatar
+                    size={100}
+                    icon={<UploadOutlined />}
+                    style={{ borderRadius: "8px" }}
+                  />
                 )}
               </Upload>
             </Form.Item>
@@ -299,6 +307,9 @@ const UserProfile = () => {
                 <Input
                   placeholder="Enter your email"
                   className="mli-tall-input"
+                  style={{
+                    backgroundColor: "#ffffff",
+                  }}
                   disabled
                 />
               </Form.Item>
@@ -507,7 +518,7 @@ const UserProfile = () => {
                     style={{
                       width: "100%",
                       padding: "16px",
-                      border: "2px dashed #3FAE6A",
+                      border: "2px dashed #d8d8d8",
                       borderRadius: "8px",
                       display: "flex",
                       alignItems: "center",
@@ -523,11 +534,11 @@ const UserProfile = () => {
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = "#f9f9f9";
-                      e.currentTarget.style.borderColor = "#3FAE6A";
+                      e.currentTarget.style.borderColor = "#d8d8d8";
                     }}
                   >
                     <UploadOutlined
-                      style={{ color: "#3FAE6A", fontSize: "18px" }}
+                      style={{ color: "#1e1e1e", fontSize: "18px" }}
                     />
                     <div style={{ textAlign: "left" }}>
                       <p

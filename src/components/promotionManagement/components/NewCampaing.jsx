@@ -347,7 +347,10 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
             maxCount={1}
             accept=".jpg,.jpeg,.png" // Restrict file picker to JPG/PNG
           >
-            <Button icon={<UploadOutlined />}>
+            <Button
+              icon={<UploadOutlined />}
+              style={{ borderColor: "#d8d8d8", color: "#1e1e1e" }}
+            >
               {uploadedImage.length > 0 ? "Replace Image" : "Click to Upload"}
             </Button>
           </Upload>

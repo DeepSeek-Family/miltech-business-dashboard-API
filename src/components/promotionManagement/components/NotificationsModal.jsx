@@ -114,7 +114,12 @@ const ImageUpload = ({ uploadedImage, onUploadChange, onRemove }) => {
         maxCount={1}
         accept=".jpg,.jpeg,.png"
       >
-        <Button icon={<UploadOutlined />}>Click to Upload</Button>
+        <Button
+          icon={<UploadOutlined />}
+          style={{ borderColor: "#d8d8d8", color: "#1e1e1e" }}
+        >
+          Click to Upload
+        </Button>
       </Upload>
       <p className="text-sm text-gray-500 mt-1">
         Allowed file types: JPG, PNG. Maximum file size: 2MB.
