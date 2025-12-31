@@ -1,13 +1,15 @@
 import { Form, Input, message } from "antd";
-import React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import FormItem from "../../components/common/FormItem";
 import image4 from "../../assets/image4.png";
 import { useRegisterMutation } from "../../redux/apiSlices/authSlice";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [registerUser, { isLoading }] = useRegisterMutation();
+  const [phoneValue, setPhoneValue] = useState("");
 
   const onFinish = async (values) => {
     const payload = {
@@ -109,10 +111,8 @@ const SignUp = () => {
             {
               validator: (_, value) => {
                 if (!value) return Promise.resolve();
-                // Allow digits, spaces, hyphens, parentheses, and leading +
-                const phoneRegex =
-                  /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/;
-                if (!phoneRegex.test(value.replace(/\s/g, ""))) {
+                // Validate that it's a valid phone number format
+                if (!/^\+?[1-9]\d{1,14}$/.test(value.replace(/\D/g, ""))) {
                   return Promise.reject(
                     new Error("Please enter a valid phone number")
                   );
@@ -122,12 +122,22 @@ const SignUp = () => {
             },
           ]}
         >
-          <Input
+          <PhoneInput
+            international
+            countryCallingCodeEditable={false}
+            countries={["PK", "AE", "OM", "QA", "KW", "BH", "SA", "BD", "GB"]}
+            defaultCountry="PK"
+            value={phoneValue}
+            onChange={setPhoneValue}
             placeholder="Enter your phone number"
+            className="phone-input-no-focus"
             style={{
               height: 45,
               border: "1px solid #3FAE6A",
               borderRadius: "200px",
+              paddingLeft: "12px",
+              fontSize: "14px",
+              fontFamily: "inherit",
             }}
           />
         </Form.Item>

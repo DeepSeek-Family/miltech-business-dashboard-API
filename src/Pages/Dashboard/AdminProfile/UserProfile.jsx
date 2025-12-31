@@ -14,40 +14,42 @@ import { useUser } from "../../../provider/User";
 import { useUpdateProfileMutation } from "../../../redux/apiSlices/authSlice";
 import { getImageUrl } from "../../../components/common/imageUrl";
 import Swal from "sweetalert2";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 const { Option } = Select;
 const { TextArea } = Input;
 
 const countryCityData = {
+  Bahrain: ["Manama"],
+  Bangladesh: ["Dhaka"],
+  Kuwait: ["Kuwait City"],
+  Oman: ["Muscat"],
   Pakistan: [
     "Islamabad",
-    "Rawalpindi",
     "Karachi",
     "Lahore",
     "Peshawar",
     "Quetta",
+    "Rawalpindi",
   ],
+  Qatar: ["Doha"],
+  "Saudi Arabia": ["Jeddah", "Riyadh"],
   "United Arab Emirates": [
     "Abu Dhabi",
-    "Dubai",
-    "Sharjah",
     "Ajman",
-    "Ras Al Khaimah",
+    "Dubai",
     "Fujairah",
+    "Ras Al Khaimah",
+    "Sharjah",
     "Umm Al Quwain",
   ],
-  Oman: ["Muscat"],
-  Qatar: ["Doha"],
-  Kuwait: ["Kuwait City"],
-  Bahrain: ["Manama"],
-  "Saudi Arabia": ["Jeddah", "Riyadh"],
-  Bangladesh: ["Dhaka"],
   "United Kingdom": [
-    "London",
-    "Manchester",
     "Birmingham",
     "Glasgow",
     "Liverpool",
+    "London",
+    "Manchester",
   ],
 };
 
@@ -58,6 +60,7 @@ const UserProfile = () => {
   const [coverFileList, setCoverFileList] = useState([]);
   const [logoFileList, setLogoFileList] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
+  const [phoneValue, setPhoneValue] = useState("");
   const { user } = useUser();
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
 
@@ -299,17 +302,58 @@ const UserProfile = () => {
                   disabled
                 />
               </Form.Item>
-              {/* Contact */}
+              {/* Phone Number */}
               <Form.Item
                 name="contact"
-                label="Contact Number"
+                label="Phone Number"
+                style={{ marginBottom: 0 }}
                 rules={[
-                  { required: true, message: "Please enter contact number" },
+                  { required: true, message: "Please enter your phone number" },
+                  {
+                    validator: (_, value) => {
+                      if (!value) return Promise.resolve();
+                      // Validate that it's a valid phone number format
+                      if (
+                        !/^\+?[1-9]\d{1,14}$/.test(value.replace(/\D/g, ""))
+                      ) {
+                        return Promise.reject(
+                          new Error("Please enter a valid phone number")
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
                 ]}
               >
-                <Input
-                  placeholder="Enter your contact number"
-                  className="mli-tall-input"
+                <PhoneInput
+                  international
+                  countryCallingCodeEditable={false}
+                  countries={[
+                    "PK",
+                    "AE",
+                    "OM",
+                    "QA",
+                    "KW",
+                    "BH",
+                    "SA",
+                    "BD",
+                    "GB",
+                  ]}
+                  value={phoneValue}
+                  onChange={(value) => {
+                    setPhoneValue(value);
+                    form.setFieldValue("contact", value);
+                  }}
+                  placeholder="Enter your phone number"
+                  className="phone-input-no-focus"
+                  style={{
+                    height: 40,
+                    border: "1px solid #d8d8d8",
+                    borderRadius: "8px",
+                    paddingLeft: "12px",
+                    fontSize: "14px",
+                    fontFamily: "inherit",
+                  }}
                 />
               </Form.Item>
             </div>

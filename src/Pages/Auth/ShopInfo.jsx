@@ -8,35 +8,35 @@ import { useUpdateProfileMutation } from "../../redux/apiSlices/authSlice";
 const { Option } = Select;
 
 const countryCityData = {
+  Bahrain: ["Manama"],
+  Bangladesh: ["Dhaka"],
+  Kuwait: ["Kuwait City"],
+  Oman: ["Muscat"],
   Pakistan: [
     "Islamabad",
-    "Rawalpindi",
     "Karachi",
     "Lahore",
     "Peshawar",
     "Quetta",
+    "Rawalpindi",
   ],
+  Qatar: ["Doha"],
+  "Saudi Arabia": ["Jeddah", "Riyadh"],
   "United Arab Emirates": [
     "Abu Dhabi",
-    "Dubai",
-    "Sharjah",
     "Ajman",
-    "Ras Al Khaimah",
+    "Dubai",
     "Fujairah",
+    "Ras Al Khaimah",
+    "Sharjah",
     "Umm Al Quwain",
   ],
-  Oman: ["Muscat"],
-  Qatar: ["Doha"],
-  Kuwait: ["Kuwait City"],
-  Bahrain: ["Manama"],
-  "Saudi Arabia": ["Jeddah", "Riyadh"],
-  Bangladesh: ["Dhaka"],
   "United Kingdom": [
-    "London",
-    "Manchester",
     "Birmingham",
     "Glasgow",
     "Liverpool",
+    "London",
+    "Manchester",
   ],
 };
 

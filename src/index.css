@@ -370,3 +370,16 @@ select {
 .ant-form-item {
   margin-bottom: 0px !important;
 }
+
+/* Remove focus border from phone input */
+.phone-input-no-focus input {
+  outline: none !important;
+  box-shadow: none !important;
+  margin-right: 12px;
+}
+
+.phone-input-no-focus input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #3FAE6A !important;
+}
