@@ -35,7 +35,7 @@ const EditTierModal = ({
           threshold: "",
           reward: "",
           lockoutDuration: "",
-          pointsSystemLockoutDuration: "",
+          pointsSystemLockoutDuration: 0,
           minSpend: "",
         }}
         onFinish={onSave}
@@ -105,7 +105,7 @@ const EditTierModal = ({
         >
           <Input type="number" className="mli-tall-input" min="0" max="100" />
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           label="Point redemption rule"
           name="pointsSystemLockoutDuration"
           rules={[
@@ -128,7 +128,7 @@ const EditTierModal = ({
           ]}
         >
           <Input type="number" className="mli-tall-input" min="0" />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item
           label="Min Total Spend"
           name="minSpend"

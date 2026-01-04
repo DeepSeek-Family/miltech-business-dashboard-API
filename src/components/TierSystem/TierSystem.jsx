@@ -120,10 +120,7 @@ export default function TierSystem() {
         pointsThreshold: Number(values.threshold) || 0,
         reward: String(values.reward || ""),
         accumulationRule: Number(values.lockoutDuration) || 0,
-        redemptionRule: Math.max(
-          1,
-          Number(values.pointsSystemLockoutDuration) || 1
-        ),
+        redemptionRule: 0,
         minTotalSpend: Number(values.minSpend) || 0,
         isActive: true,
       };
@@ -235,10 +232,10 @@ export default function TierSystem() {
                     <span className="font-semibold">Accumulation Rule:</span>{" "}
                     {tier.lockoutDuration}
                   </p>
-                  <p>
+                  {/* <p>
                     <span className="font-semibold">Redemption Rule:</span>{" "}
                     {tier.pointsSystemLockoutDuration}
-                  </p>
+                  </p> */}
                   <p>
                     <span className="font-semibold">Minimum Spend:</span>
                     {tier.minSpend}
