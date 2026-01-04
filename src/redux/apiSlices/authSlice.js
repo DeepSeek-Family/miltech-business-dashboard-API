@@ -8,7 +8,7 @@ export const authApi = api.injectEndpoints({
     // ---------------------------------------
     otpVerify: builder.mutation({
       query: (data) => ({
-        url: "/auth/verify-phone",
+        url: "/auth/verify-otp",
         method: "POST",
         body: data,
       }),
@@ -24,7 +24,7 @@ export const authApi = api.injectEndpoints({
     // ---------------------------------------
     resendOtp: builder.mutation({
       query: (data) => ({
-        url: "/auth/phone-otp",
+        url: "/auth/resend-otp",
         method: "POST",
         body: data,
       }),
@@ -43,7 +43,7 @@ export const authApi = api.injectEndpoints({
         },
       }),
       transformResponse: (data) => data,
-      
+
       invalidatesTags: ["Profile"],
     }),
 

@@ -12,12 +12,12 @@ const ForgotPassword = () => {
 
   const onFinish = async (values) => {
     try {
-      const payload = { phone: values?.phone };
+      const payload = { identifier: values?.identifier };
       const res = await forgotPassword(payload).unwrap();
       // Optionally, check res.success or server message
       message.success(res?.message || "OTP sent to your phone");
       navigate(
-        `/auth/otp-verification?phone=${encodeURIComponent(values?.phone)}`
+        `/auth/otp-verification?phone=${encodeURIComponent(values?.identifier)}`
       );
     } catch (err) {
       const errMsg =
@@ -40,9 +40,9 @@ const ForgotPassword = () => {
 
       <Form layout="vertical" onFinish={onFinish}>
         <Form.Item
-          label={<p>Phone Number</p>}
-          name="phone"
-          id="phone"
+          label={<p>Email/Phone Number</p>}
+          name="identifier"
+          id="identifier"
           rules={[
             {
               required: true,

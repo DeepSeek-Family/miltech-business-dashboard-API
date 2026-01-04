@@ -32,9 +32,17 @@ const PrivateRoute = ({ children }) => {
   // Step 1 — Try reading role from JWT (no API hit)
   const tokenPayload = parseJwt();
   const tokenRole = tokenPayload?.role;
+  const token = localStorage.getItem("token");
+
+  console.log("ProtectedRoute Debug:", {
+    hasToken: !!token,
+    tokenRole,
+    tokenPayload,
+  });
 
   // If token already has valid role, allow fast path
   if (tokenRole && allowedRoles.includes(tokenRole)) {
+    console.log("Token role is valid, allowing access");
     return children;
   }
 
