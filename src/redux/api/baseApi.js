@@ -38,8 +38,8 @@ const tokenService = {
 // ---------------------------------------------
 // BASE API SETUP
 // ---------------------------------------------
-const baseUrl = "http://10.10.7.8:5004/api/v1";
-// const baseUrl = "https://44kb593x-5004.inc1.devtunnels.ms/api/v1";
+// const baseUrl = "http://10.10.7.8:5004/api/v1";
+const baseUrl = "https://44kb593x-5004.inc1.devtunnels.ms/api/v1";
 
 // Attach Access Token to every request
 const rawBaseQuery = fetchBaseQuery({
