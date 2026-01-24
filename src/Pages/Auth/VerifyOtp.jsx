@@ -60,11 +60,11 @@ const VerifyOtp = () => {
       }).unwrap();
 
       // Store tokens for password reset flow
-      if (response?.resetToken) {
-        localStorage.setItem("resetToken", response.resetToken);
-      }
       if (response?.accessToken) {
         localStorage.setItem("token", response.accessToken);
+      }
+      if (response?.resetToken) {
+        localStorage.setItem("resetToken", response.resetToken);
       }
 
       Swal.fire({
@@ -79,10 +79,10 @@ const VerifyOtp = () => {
         if (type === "signup") {
           navigate(
             `/auth/shop-info?phone=${encodeURIComponent(
-              phone
+              phone,
             )}&email=${encodeURIComponent(
-              new URLSearchParams(location.search).get("email")
-            )}`
+              new URLSearchParams(location.search).get("email"),
+            )}`,
           );
           return;
         }
@@ -223,10 +223,10 @@ const VerifyOtp = () => {
             {isResending
               ? "Resending..."
               : timeLeft > 0
-              ? `Resend in ${Math.floor(timeLeft / 60)}:${String(
-                  timeLeft % 60
-                ).padStart(2, "0")}`
-              : "Click to resend"}
+                ? `Resend in ${Math.floor(timeLeft / 60)}:${String(
+                    timeLeft % 60,
+                  ).padStart(2, "0")}`
+                : "Click to resend"}
           </button>
         </p>
       </div>

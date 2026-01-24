@@ -41,10 +41,17 @@ export const selleManagementApi = api.injectEndpoints({
     // GET today's sales/transactions
     // ---------------------------------------
     getTodaysSells: builder.query({
-      query: ({ page = 1, limit = 10 } = {}) => ({
-        url: `/sell/merchant?page=${page}&limit=${limit}`,
-        method: "GET",
-      }),
+      query: ({ page = 1, limit = 10, month } = {}) => {
+        const baseUrl = `/sell/merchant?page=${page}&limit=${limit}`;
+        const url = month
+          ? `${baseUrl}&month=${encodeURIComponent(month)}`
+          : baseUrl;
+
+        return {
+          url,
+          method: "GET",
+        };
+      },
       transformResponse: (response) => response,
       providesTags: ["sellManagement"],
     }),
@@ -53,10 +60,13 @@ export const selleManagementApi = api.injectEndpoints({
     // GET customers list
     // ---------------------------------------
     getCustomers: builder.query({
-      query: ({ page = 1, limit = 10 } = {}) => ({
-        url: `/sell/customer?page=${page}&limit=${limit}`,
-        method: "GET",
-      }),
+      query: ({ page = 1, limit = 10, searchTerm = "" } = {}) => {
+        const url = `/sell/customer?page=${page}&limit=${limit}`;
+        return {
+          url: searchTerm ? `${url}&searchTerm=${encodeURIComponent(searchTerm)}` : url,
+          method: "GET",
+        };
+      },
       transformResponse: (response) => response,
       providesTags: ["sellManagement"],
     }),

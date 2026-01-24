@@ -130,7 +130,7 @@ const UserProfile = () => {
       formData.append("firstName", values.username);
       formData.append("businessName", values.businessName);
       formData.append("email", values.email);
-      formData.append("phone", values.contact);
+      // formData.append("phone", values.contact);
       formData.append("website", values.url);
       formData.append("address", values.address);
       formData.append("service", values.service);
@@ -328,7 +328,7 @@ const UserProfile = () => {
                         !/^\+?[1-9]\d{1,14}$/.test(value.replace(/\D/g, ""))
                       ) {
                         return Promise.reject(
-                          new Error("Please enter a valid phone number")
+                          new Error("Please enter a valid phone number"),
                         );
                       }
                       return Promise.resolve();
@@ -454,7 +454,7 @@ const UserProfile = () => {
                   disabled={!selectedCountry}
                 >
                   {selectedCountry &&
-                    countryCityData[selectedCountry].map((city) => (
+                    countryCityData[selectedCountry]?.map((city) => (
                       <Option key={city} value={city}>
                         {city}
                       </Option>
@@ -564,91 +564,6 @@ const UserProfile = () => {
                 </Upload>
               </Form.Item>
             </div>
-            {/* Upload Merchant Logo */}
-            {/* <div className="flex-1">
-              <Form.Item
-                name="image"
-                label="Upload Merchant Logo"
-                rules={[
-                  {
-                    required: false,
-                    message: "Please upload an image (JPG/PNG only)",
-                  },
-                ]}
-              >
-                <Upload
-                  beforeUpload={(file) => {
-                    const isJpgOrPng =
-                      file.type === "image/jpeg" || file.type === "image/png";
-                    if (!isJpgOrPng) {
-                      message.error("You can only upload JPG/PNG files!");
-                      return Upload.LIST_IGNORE;
-                    }
-
-                    const isLessThan2MB = file.size / 1024 / 1024 < 2;
-                    if (!isLessThan2MB) {
-                      message.error("Image must be smaller than 2MB!");
-                      return Upload.LIST_IGNORE;
-                    }
-
-                    return false;
-                  }}
-                  onChange={handleLogoImageChange}
-                  maxCount={1}
-                  accept=".jpg,.jpeg,.png"
-                  className="w-full"
-                  fileList={logoFileList}
-                >
-                  <div
-                    style={{
-                      width: "100%",
-                      padding: "16px",
-                      border: "2px dashed #3FAE6A",
-                      borderRadius: "8px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "8px",
-                      background: "#f9f9f9",
-                      cursor: "pointer",
-                      transition: "all 0.3s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#f0f9f6";
-                      e.currentTarget.style.borderColor = "#2d8659";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "#f9f9f9";
-                      e.currentTarget.style.borderColor = "#3FAE6A";
-                    }}
-                  >
-                    <UploadOutlined
-                      style={{ color: "#3FAE6A", fontSize: "18px" }}
-                    />
-                    <div style={{ textAlign: "left" }}>
-                      <p
-                        style={{
-                          margin: 0,
-                          fontWeight: "600",
-                          color: "#1E1E1E",
-                        }}
-                      >
-                        Click to upload or drag and drop
-                      </p>
-                      <p
-                        style={{
-                          margin: "4px 0 0 0",
-                          fontSize: "12px",
-                          color: "#666",
-                        }}
-                      >
-                        JPG/PNG, max 2MB
-                      </p>
-                    </div>
-                  </div>
-                </Upload>
-              </Form.Item>
-            </div> */}
           </div>
 
           {/* Company About Us */}

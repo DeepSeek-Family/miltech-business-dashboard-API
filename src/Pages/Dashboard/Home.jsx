@@ -34,7 +34,7 @@ const Home = () => {
   const optionsMap = {
     today: "Today",
     "7d": "Last 7 Days",
-    "30d": "Last 30 Days",
+    "1m": "Last 30 Days",
     all: "All Time",
   };
 
@@ -44,7 +44,7 @@ const Home = () => {
 
   console.log(response);
 
-  const options2 = ["today", "7d", "30d", "all"];
+  const options2 = ["today", "7d", "1m", "all"];
 
   // Handle dropdown change
   const handleRangeChange = (option) => {

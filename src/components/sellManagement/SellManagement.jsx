@@ -34,10 +34,12 @@ const SellManagement = () => {
     const page = parseInt(searchParams.get("page")) || 1;
     const limit = parseInt(searchParams.get("limit")) || 10;
     const term = searchParams.get("searchTerm") || "";
+    const monthParam = searchParams.get("month") || "";
     const view = searchParams.get("view") || "";
 
     setPagination({ current: page, pageSize: limit });
     setSearchText(term);
+    setSelectedMonth(monthParam);
     setIsNewSellPage(view === "newsell");
   }, []);
 
@@ -49,6 +51,7 @@ const SellManagement = () => {
   } = useGetTodaysSellsQuery({
     page: pagination.current,
     limit: pagination.pageSize,
+    month: selectedMonth,
   });
 
   // Update local data when API data changes
@@ -80,7 +83,11 @@ const SellManagement = () => {
     }
   }, [apiData]);
 
-  const handleMonthChange = (month) => setSelectedMonth(month);
+  const handleMonthChange = (month) => {
+    setSelectedMonth(month || "");
+    setPagination({ current: 1, pageSize: pagination.pageSize });
+    updateURL({ month: month || "", page: 1 });
+  };
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -291,6 +298,7 @@ const SellManagement = () => {
             placeholder="Filter by Month"
             style={{ width: 200 }}
             onChange={handleMonthChange}
+            value={selectedMonth || undefined}
             allowClear
             className="text-[14px] h-10"
           >

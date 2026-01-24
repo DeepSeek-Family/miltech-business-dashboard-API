@@ -71,10 +71,10 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
       message.error("Please enter a card code first");
       return;
     }
-    if (selectedPromotions.length === 0) {
-      message.error("Please select at least one promotion");
-      return;
-    }
+    // if (selectedPromotions.length === 0) {
+    //   message.error("Please select at least one promotion");
+    //   return;
+    // }
 
     const totalBill = form.getFieldValue("totalAmount");
     const pointRedeemed = form.getFieldValue("pointRedeemed");
@@ -363,7 +363,7 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                 <Input className="mli-tall-input" disabled />
               </Form.Item>
               <Form.Item
-                label="Total Bill Amount"
+                label="Total Bill Amount (Excluding Promos)"
                 name="totalAmount"
                 className="mb-3"
                 rules={[
@@ -429,12 +429,12 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
               >
                 <Input className="mli-tall-input" type="number" min="0" />
               </Form.Item>
-              <Form.Item label="Expiry Date" name="date" className="mb-6">
+              {/* <Form.Item label="Expiry Date" name="date" className="mb-6">
                 <DatePicker
                   className="mli-tall-picker"
                   defaultValue={editingRow ? dayjs(editingRow.date) : null}
                 />
-              </Form.Item>
+              </Form.Item> */}
 
               <div className="flex flex-wrap gap-4">
                 {digitalCardData?.promotions &&

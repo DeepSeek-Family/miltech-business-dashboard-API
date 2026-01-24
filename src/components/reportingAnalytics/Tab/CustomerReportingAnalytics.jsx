@@ -228,7 +228,7 @@ export default function MonthlyStatsChartCustomer() {
       return {
         key: index,
         sl: serialNumber,
-        date: new Date(),
+        date: item?.date || "-",
         customerId: item.customerId || "-",
         CustomerName: item.customerName || "-",
         customerName: item.customerName || "-",

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button, Modal, Input, Tooltip, Table, message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import MarchantIcon from "../../assets/marchant.png";
 import { Rate } from "antd";
 import CustomTable from "../common/CustomTable";
@@ -19,8 +19,15 @@ const CustomerManagement = () => {
   const [selectedRecord, setSelectedRecord] = useState(null);
 
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  // Fetch customers from API
+  // Get search term from URL on mount
+  useEffect(() => {
+    const urlSearchTerm = searchParams.get("searchTerm") || "";
+    setSearchText(urlSearchTerm);
+  }, []);
+
+  // Fetch customers from API with search
   const {
     data: apiData,
     isLoading,
@@ -28,6 +35,7 @@ const CustomerManagement = () => {
   } = useGetCustomersQuery({
     page: pagination.current,
     limit: pagination.pageSize,
+    searchTerm: searchText,
   });
 
   // Export customers
@@ -69,6 +77,7 @@ const CustomerManagement = () => {
         name: item.name || "-",
         image: item.profile || MarchantIcon,
         customUserId: item.customUserId || "-",
+        totalPointsEarned: item.totalPointsEarned || 0,
         email: item.email || "-",
         phone: item.phone || "-",
         location: item.country || "-",
@@ -194,9 +203,9 @@ const CustomerManagement = () => {
       align: "center",
     },
     {
-      title: "Sales Rep",
-      dataIndex: "salesRep",
-      key: "salesRep",
+      title: "Rewords",
+      dataIndex: "totalPointsEarned",
+      key: "totalPointsEarned",
       align: "center",
     },
     {
@@ -255,19 +264,8 @@ const CustomerManagement = () => {
     },
   ];
 
-  // Filtered data based on search input
-  const filteredData = data.filter((item) => {
-    const query = searchText.trim().toLowerCase();
-
-    // convert id to string, compare against the raw search (no lowercasing numbers)
-    const idMatch = item.customerID.toString().includes(searchText.trim());
-
-    const nameMatch = item.name.toLowerCase().includes(query);
-    const phoneMatch = item.phone.toLowerCase().includes(query);
-    const emailMatch = item.email.toLowerCase().includes(query);
-
-    return idMatch || nameMatch || phoneMatch || emailMatch;
-  });
+  // Filtered data based on backend results
+  const filteredData = data;
 
   return (
     <div className="">
@@ -285,9 +283,19 @@ const CustomerManagement = () => {
         {/* Search Bar */}
         <div className="mb-4 flex gap-4">
           <Input
-            placeholder="Search by Customer ID, Name, Location or Sales Rep"
+            placeholder="Search by Customer ID, Name or Location"
             value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSearchText(value);
+              setPagination({ current: 1, pageSize: 10 });
+              // Update URL with search term
+              if (value.trim()) {
+                setSearchParams({ searchTerm: value });
+              } else {
+                setSearchParams({});
+              }
+            }}
             className="w-96"
           />
           <Button
