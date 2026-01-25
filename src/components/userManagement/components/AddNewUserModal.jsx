@@ -61,7 +61,7 @@ const AddNewUserModal = ({
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(value)) {
                   return Promise.reject(
-                    new Error("Please enter a valid email address")
+                    new Error("Please enter a valid email address"),
                   );
                 }
                 return Promise.resolve();
@@ -84,7 +84,7 @@ const AddNewUserModal = ({
                   /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/;
                 if (!phoneRegex.test(value.replace(/\s/g, ""))) {
                   return Promise.reject(
-                    new Error("Please enter a valid phone number")
+                    new Error("Please enter a valid phone number"),
                   );
                 }
                 return Promise.resolve();
@@ -134,9 +134,9 @@ const AddNewUserModal = ({
                   return Promise.reject(
                     new Error(
                       `Password must contain at least one ${missing.join(
-                        ", one "
-                      )}`
-                    )
+                        ", one ",
+                      )}`,
+                    ),
                   );
                 },
               },
@@ -151,7 +151,7 @@ const AddNewUserModal = ({
           rules={[{ required: true, message: "Please select a role" }]}
         >
           <Select placeholder="Select role" className="mli-tall-select">
-            <Option value="MERCENT">Admin</Option>
+            <Option value="ADMIN_MERCENT">Admin</Option>
             <Option value="VIEW_MERCENT">User</Option>
           </Select>
         </Form.Item>
