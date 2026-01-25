@@ -63,7 +63,26 @@ export const selleManagementApi = api.injectEndpoints({
       query: ({ page = 1, limit = 10, searchTerm = "" } = {}) => {
         const url = `/sell/customer?page=${page}&limit=${limit}`;
         return {
-          url: searchTerm ? `${url}&searchTerm=${encodeURIComponent(searchTerm)}` : url,
+          url: searchTerm
+            ? `${url}&searchTerm=${encodeURIComponent(searchTerm)}`
+            : url,
+          method: "GET",
+        };
+      },
+      transformResponse: (response) => response,
+      providesTags: ["sellManagement"],
+    }),
+
+    // ---------------------------------------
+    // GET recent customers list
+    // ---------------------------------------
+    getRecentCustomers: builder.query({
+      query: ({ page = 1, limit = 10, searchTerm = "" } = {}) => {
+        const url = `/sell/recent-new/customer?page=${page}&limit=${limit}`;
+        return {
+          url: searchTerm
+            ? `${url}&searchTerm=${encodeURIComponent(searchTerm)}`
+            : url,
           method: "GET",
         };
       },
@@ -132,4 +151,5 @@ export const {
   useGetUserTransactionsQuery,
   useGetCustomerTierQuery,
   useLazyExportCustomersQuery,
+  useGetRecentCustomersQuery,
 } = selleManagementApi;

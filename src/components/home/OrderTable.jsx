@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Table, Tooltip, Modal, Spin } from "antd";
 import dayjs from "dayjs";
-import { useGetCustomersQuery } from "../../redux/apiSlices/selleManagementSlice";
+import { useGetRecentCustomersQuery } from "../../redux/apiSlices/selleManagementSlice";
 
 const components = {
   header: {
@@ -43,7 +43,7 @@ const OrderTable = () => {
     data: customersResponse,
     isLoading,
     isFetching,
-  } = useGetCustomersQuery({
+  } = useGetRecentCustomersQuery({
     page: pagination.current,
     limit: pagination.pageSize,
   });
