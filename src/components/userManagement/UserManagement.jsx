@@ -54,7 +54,7 @@ const UserManagement = () => {
       password: "******",
       phone: item.phone || "-",
       role:
-        item.role === "MERCENT"
+        item.role === "ADMIN_MERCENT"
           ? "Admin"
           : item.role === "VIEW_MERCENT"
           ? "User"
@@ -73,7 +73,7 @@ const UserManagement = () => {
     current: page,
   };
 
-  const [roles] = useState(["MERCENT", "VIEW_MERCENT"]);
+  const [roles] = useState(["ADMIN_MERCENT", "VIEW_MERCENT"]);
 
   const [isUserModalVisible, setIsUserModalVisible] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
