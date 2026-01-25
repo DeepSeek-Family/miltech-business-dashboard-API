@@ -381,5 +381,18 @@ select {
 .phone-input-no-focus input:focus {
   outline: none !important;
   box-shadow: none !important;
-  border-color: #3FAE6A !important;
+  border-color: #3fae6a !important;
+}
+
+.ant-upload-2 .ant-upload-select {
+  width: 400px !important;
+  height: 150px !important;
+}
+.ant-upload-2 .ant-upload-select .ant-upload {
+  width: 400px !important;
+  height: 150px !important;
+}
+.ant-upload-2 .ant-upload-list-item {
+  width: 400px !important;
+  height: 150px !important;
 }

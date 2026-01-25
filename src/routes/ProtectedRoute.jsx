@@ -15,7 +15,7 @@ const parseJwt = () => {
       atob(base64)
         .split("")
         .map((c) => "%" + c.charCodeAt(0).toString(16).padStart(2, "0"))
-        .join("")
+        .join(""),
     );
 
     return JSON.parse(jsonPayload);
@@ -24,7 +24,7 @@ const parseJwt = () => {
   }
 };
 
-const allowedRoles = ["MERCENT", "VIEW_MERCENT"];
+const allowedRoles = ["ADMIN_MERCENT", "MERCENT", "VIEW_MERCENT"];
 
 const PrivateRoute = ({ children }) => {
   const location = useLocation();

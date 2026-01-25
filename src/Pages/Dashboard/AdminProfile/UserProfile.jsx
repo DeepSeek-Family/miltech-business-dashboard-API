@@ -57,6 +57,7 @@ const UserProfile = () => {
   const [form] = Form.useForm();
   const [imageUrl, setImageUrl] = useState(null);
   const [fileList, setFileList] = useState([]);
+  const [coverImageUrl, setCoverImageUrl] = useState(null);
   const [coverFileList, setCoverFileList] = useState([]);
   const [logoFileList, setLogoFileList] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -102,6 +103,20 @@ const UserProfile = () => {
           },
         ]);
       }
+
+      // Set cover photo if available
+      if (user.photo) {
+        const coverImageSource = getImageUrl(user.photo);
+        setCoverImageUrl(coverImageSource);
+        setCoverFileList([
+          {
+            uid: "-1",
+            name: "cover.jpg",
+            status: "done",
+            url: coverImageSource,
+          },
+        ]);
+      }
     }
   }, [user, form]);
 
@@ -111,8 +126,11 @@ const UserProfile = () => {
       if (imageUrl && imageUrl.startsWith("blob:")) {
         URL.revokeObjectURL(imageUrl);
       }
+      if (coverImageUrl && coverImageUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(coverImageUrl);
+      }
     };
-  }, [imageUrl]);
+  }, [imageUrl, coverImageUrl]);
 
   const onFinish = async (values) => {
     try {
@@ -197,6 +215,20 @@ const UserProfile = () => {
   const handleCoverImageChange = ({ fileList: newFileList }) => {
     const limitedFileList = newFileList.slice(-1);
     setCoverFileList(limitedFileList);
+
+    if (limitedFileList.length > 0 && limitedFileList[0].originFileObj) {
+      const newCoverImageUrl = URL.createObjectURL(
+        limitedFileList[0].originFileObj,
+      );
+
+      if (coverImageUrl && coverImageUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(coverImageUrl);
+      }
+
+      setCoverImageUrl(newCoverImageUrl);
+    } else {
+      setCoverImageUrl(null);
+    }
   };
 
   const handleLogoImageChange = ({ fileList: newFileList }) => {
@@ -477,94 +509,101 @@ const UserProfile = () => {
             />
           </Form.Item>
 
-          {/* Upload Section - Logo and Cover Photo */}
-          <div className="mt-4 flex gap-5 justify-between">
-            {/* Upload Merchant Cover Photo */}
-            <div className="flex-1">
-              <Form.Item
-                name="coverImage"
-                label="Upload Merchant Cover Photo"
-                rules={[
-                  {
-                    required: false,
-                    message: "Please upload an image (JPG/PNG only)",
-                  },
-                ]}
-              >
-                <Upload
-                  beforeUpload={(file) => {
-                    const isJpgOrPng =
-                      file.type === "image/jpeg" || file.type === "image/png";
-                    if (!isJpgOrPng) {
-                      message.error("You can only upload JPG/PNG files!");
-                      return Upload.LIST_IGNORE;
-                    }
-
-                    const isLessThan2MB = file.size / 1024 / 1024 < 2;
-                    if (!isLessThan2MB) {
-                      message.error("Image must be smaller than 2MB!");
-                      return Upload.LIST_IGNORE;
-                    }
-
-                    return false;
+          {/* Upload Section - Cover Photo */}
+          <Form.Item
+            label="Cover Photo"
+            className="mt-4"
+            style={{ marginBottom: 0 }}
+          >
+            <Upload
+              name="coverPhoto"
+              showUploadList={false}
+              action="/upload"
+              onChange={handleCoverImageChange}
+              beforeUpload={beforeUpload}
+              fileList={coverFileList}
+              listType="picture-card"
+              maxCount={1}
+              className="ant-upload-2"
+            >
+              {coverImageUrl ? (
+                <div
+                  style={{
+                    position: "relative",
+                    width: "400px",
+                    height: "150px",
+                    overflow: "hidden",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "8px",
                   }}
-                  onChange={handleCoverImageChange}
-                  maxCount={1}
-                  accept=".jpg,.jpeg,.png"
-                  className="w-full"
-                  fileList={coverFileList}
                 >
-                  <div
+                  <img
+                    src={coverImageUrl}
+                    alt="cover"
                     style={{
                       width: "100%",
-                      padding: "16px",
-                      border: "2px dashed #d8d8d8",
+                      height: "100%",
+                      objectFit: "cover",
                       borderRadius: "8px",
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: "12px",
+                      top: "12px",
+                      background: "rgba(0,0,0,0.45)",
+                      color: "#fff",
+                      padding: "6px 10px",
+                      borderRadius: "6px",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "center",
-                      gap: "8px",
-                      background: "#f9f9f9",
-                      cursor: "pointer",
-                      transition: "all 0.3s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#f0f9f6";
-                      e.currentTarget.style.borderColor = "#2d8659";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "#f9f9f9";
-                      e.currentTarget.style.borderColor = "#d8d8d8";
+                      gap: "6px",
+                      fontSize: "12px",
                     }}
                   >
-                    <UploadOutlined
-                      style={{ color: "#1e1e1e", fontSize: "18px" }}
-                    />
-                    <div style={{ textAlign: "left" }}>
-                      <p
-                        style={{
-                          margin: 0,
-                          fontWeight: "600",
-                          color: "#1E1E1E",
-                        }}
-                      >
-                        Click to upload or drag and drop
-                      </p>
-                      <p
-                        style={{
-                          margin: "4px 0 0 0",
-                          fontSize: "12px",
-                          color: "#666",
-                        }}
-                      >
-                        JPG/PNG, max 2MB
-                      </p>
-                    </div>
+                    <UploadOutlined />
+                    <span>Change</span>
                   </div>
-                </Upload>
-              </Form.Item>
-            </div>
-          </div>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    width: "400px",
+                    height: "200px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#fafafa",
+                    border: "1px dashed #d9d9d9",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    transition: "all 0.3s ease",
+                  }}
+                >
+                  <UploadOutlined
+                    style={{ fontSize: "32px", color: "#1890ff" }}
+                  />
+                  <p style={{ marginTop: "8px", color: "#666" }}>
+                    Upload Cover Photo (400x200px)
+                  </p>
+                </div>
+              )}
+            </Upload>
+            <p
+              style={{
+                marginTop: "8px",
+                fontSize: "12px",
+                color: "#666",
+              }}
+            >
+              Tip: Use 400x200px JPG/PNG, max 2MB. Click the image or area to
+              replace your cover photo.
+            </p>
+          </Form.Item>
 
           {/* Company About Us */}
           <Form.Item
