@@ -91,6 +91,7 @@ const PromotionManagement = () => {
       discountPercentage: item.discountPercentage,
       startDate: item.startDate,
       endDate: item.endDate,
+      grossValue: item.grossValue,
       selectedDays:
         item.availableDays && item.availableDays[0] === "all"
           ? ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
@@ -326,6 +327,12 @@ const PromotionManagement = () => {
       title: "Discount Percentage",
       dataIndex: "discountPercentage",
       key: "discountPercentage",
+      align: "center",
+    },
+    {
+      title: "Gross Value",
+      dataIndex: "grossValue",
+      key: "grossValue",
       align: "center",
     },
     {

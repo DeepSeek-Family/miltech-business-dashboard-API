@@ -81,6 +81,7 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
         discountPercentage: editData.discountPercentage,
         dateRange: dateRange,
         promotionDays: initialDays,
+        grossValue: editData.grossValue,
       });
     }
   }, [isEdit, editData]);
