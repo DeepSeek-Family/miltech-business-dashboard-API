@@ -42,7 +42,7 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
     setSelectedPromotions((prev) =>
       prev.includes(promotionId)
         ? prev.filter((id) => id !== promotionId)
-        : [...prev, promotionId]
+        : [...prev, promotionId],
     );
   };
 
@@ -373,12 +373,12 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                       const numValue = parseFloat(value);
                       if (isNaN(numValue)) {
                         return Promise.reject(
-                          new Error("Please enter a valid number")
+                          new Error("Please enter a valid number"),
                         );
                       }
                       if (numValue < 0) {
                         return Promise.reject(
-                          new Error("Amount cannot be negative")
+                          new Error("Amount cannot be negative"),
                         );
                       }
                       return Promise.resolve();
@@ -407,19 +407,19 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
 
                       if (isNaN(numValue)) {
                         return Promise.reject(
-                          new Error("Please enter a valid number")
+                          new Error("Please enter a valid number"),
                         );
                       }
                       if (numValue < 0) {
                         return Promise.reject(
-                          new Error("Points cannot be negative")
+                          new Error("Points cannot be negative"),
                         );
                       }
                       if (numValue > availablePoints) {
                         return Promise.reject(
                           new Error(
-                            `Cannot exceed available points (${availablePoints})`
-                          )
+                            `Cannot exceed available points (${availablePoints})`,
+                          ),
                         );
                       }
                       return Promise.resolve();

@@ -142,10 +142,11 @@ const PromotionManagement = () => {
           : null,
         endDate: newCampaign.endDate
           ? new Date(
-              new Date(newCampaign.endDate).setHours(23, 59, 59, 999)
+              new Date(newCampaign.endDate).setHours(23, 59, 59, 999),
             ).toISOString()
           : null,
         availableDays: isAllDays ? ["all"] : promotionDays,
+        grossValue: Number(newCampaign.grossValue) || 1,
       };
 
       // Append data as JSON string
@@ -201,10 +202,11 @@ const PromotionManagement = () => {
           : null,
         endDate: updatedCampaign.endDate
           ? new Date(
-              new Date(updatedCampaign.endDate).setHours(23, 59, 59, 999)
+              new Date(updatedCampaign.endDate).setHours(23, 59, 59, 999),
             ).toISOString()
           : null,
         availableDays: isAllDays ? ["all"] : promotionDays,
+        grossValue: Number(updatedCampaign.grossValue) || 0,
       };
 
       console.log("Data Object to send:", dataObj);
@@ -449,7 +451,7 @@ const PromotionManagement = () => {
                 if (result.isConfirmed) {
                   try {
                     const response = await togglePromoStatus(
-                      record.raw._id
+                      record.raw._id,
                     ).unwrap();
                     Swal.fire({
                       title: "Updated!",
