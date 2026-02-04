@@ -87,7 +87,7 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
     try {
       const requestBody = {
         digitalCardCode: cardCode,
-        promotionId: selectedPromotions[0],
+        promotionId: selectedPromotions,
         totalBill: parseFloat(totalBill),
         pointRedeemed: parseFloat(pointRedeemed) || 0,
       };
@@ -254,7 +254,7 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
       const checkoutBody = {
         digitalCardCode: cardCode,
         totalBill: approvalResponse.totalBill,
-        promotionId: selectedPromotions[0] || null,
+        promotionId: selectedPromotions,
         pointRedeemed: parseFloat(form.getFieldValue("pointRedeemed")) || 0,
       };
 
