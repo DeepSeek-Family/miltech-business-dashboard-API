@@ -475,11 +475,16 @@ const UserProfile = () => {
               {/* State */}
               <Form.Item
                 name="city"
-                label="City"
-                rules={[{ required: true, message: "Please select your City" }]}
+                label="City (State/Province)"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select your City (State/Province)",
+                  },
+                ]}
               >
                 <Select
-                  placeholder="Select your city"
+                  placeholder="Select your City (State/Province)"
                   showSearch
                   optionFilterProp="children"
                   className="mli-tall-select"

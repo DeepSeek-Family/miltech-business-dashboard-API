@@ -82,6 +82,7 @@ const ShopInfo = () => {
         icon: "success",
         confirmButtonText: "Done",
       }).then(() => {
+        localStorage.removeItem("token");
         navigate("/auth/login");
       });
     } catch (err) {
@@ -202,10 +203,10 @@ const ShopInfo = () => {
         {/* City Dropdown */}
         <Form.Item
           name="city"
-          rules={[{ required: true, message: "Please select your city" }]}
+          rules={[{ required: true, message: "Please select your City (State/Province)" }]}
         >
           <Select
-            placeholder="Select Your City"
+            placeholder="Select Your City (State/Province)"
             className="custom-select"
             dropdownClassName="custom-dropdown"
             style={{

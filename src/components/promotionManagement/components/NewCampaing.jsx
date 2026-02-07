@@ -249,6 +249,36 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
 
           <div className="w-full flex flex-col gap-4">
             <Form.Item
+              label="Gross Value of Promotion"
+              name="grossValue"
+              rules={[
+                { required: true },
+                {
+                  validator: (_, value) => {
+                    if (!value) return Promise.resolve();
+                    const numValue = parseFloat(value);
+                    if (isNaN(numValue)) {
+                      return Promise.reject(
+                        new Error("Please enter a valid number"),
+                      );
+                    }
+                    if (numValue <= 0) {
+                      return Promise.reject(
+                        new Error("Gross value cannot be negative"),
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
+            >
+              <Input
+                className="px-3 mli-tall-input"
+                placeholder="Enter Gross Value"
+                type="number"
+              />
+            </Form.Item>
+            <Form.Item
               label="Discount Percentage"
               name="discountPercentage"
               rules={[
@@ -284,37 +314,6 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
                 min="0"
                 max="100"
                 step="0.01"
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="Gross Value"
-              name="grossValue"
-              rules={[
-                { required: true },
-                {
-                  validator: (_, value) => {
-                    if (!value) return Promise.resolve();
-                    const numValue = parseFloat(value);
-                    if (isNaN(numValue)) {
-                      return Promise.reject(
-                        new Error("Please enter a valid number"),
-                      );
-                    }
-                    if (numValue <= 0) {
-                      return Promise.reject(
-                        new Error("Gross value cannot be negative"),
-                      );
-                    }
-                    return Promise.resolve();
-                  },
-                },
-              ]}
-            >
-              <Input
-                className="px-3 mli-tall-input"
-                placeholder="Enter Gross Value"
-                type="number"
               />
             </Form.Item>
           </div>

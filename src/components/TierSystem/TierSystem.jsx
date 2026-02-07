@@ -236,10 +236,10 @@ export default function TierSystem() {
                     <span className="font-semibold">Redemption Rule:</span>{" "}
                     {tier.pointsSystemLockoutDuration}
                   </p> */}
-                  <p>
+                  {/* <p>
                     <span className="font-semibold">Minimum Spend:</span>{" "}
                     {tier.minSpend}
-                  </p>
+                  </p> */}
                 </div>
                 <div className="flex gap-2">
                   <Button
