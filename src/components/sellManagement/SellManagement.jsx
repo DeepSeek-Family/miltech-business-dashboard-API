@@ -28,20 +28,34 @@ const SellManagement = () => {
   const [isNewSellPage, setIsNewSellPage] = useState(false);
   const [editingRow, setEditingRow] = useState(null);
   const [form] = Form.useForm();
+  const isInitialMount = React.useRef(true);
 
-  // Initialize state from URL parameters
+  // Initialize state from URL parameters on mount only
   useEffect(() => {
-    const page = parseInt(searchParams.get("page")) || 1;
-    const limit = parseInt(searchParams.get("limit")) || 10;
-    const term = searchParams.get("searchTerm") || "";
-    const monthParam = searchParams.get("month") || "";
-    const view = searchParams.get("view") || "";
+    if (isInitialMount.current) {
+      const page = parseInt(searchParams.get("page")) || 1;
+      const limit = parseInt(searchParams.get("limit")) || 10;
+      const term = searchParams.get("searchTerm") || "";
+      const monthParam = searchParams.get("month") || "";
+      const view = searchParams.get("view") || "";
 
-    setPagination({ current: page, pageSize: limit });
-    setSearchText(term);
-    setSelectedMonth(monthParam);
-    setIsNewSellPage(view === "newsell");
+      setPagination({ current: page, pageSize: limit });
+      setSearchText(term);
+      setSelectedMonth(monthParam);
+      setIsNewSellPage(view === "newsell");
+      isInitialMount.current = false;
+    }
   }, []);
+
+  // Update URL whenever pagination changes (only after initial mount)
+  useEffect(() => {
+    if (!isInitialMount.current) {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set("page", pagination.current);
+      newParams.set("limit", pagination.pageSize);
+      setSearchParams(newParams);
+    }
+  }, [pagination.current, pagination.pageSize]);
 
   // Fetch today's sales from API
   const {
@@ -54,11 +68,16 @@ const SellManagement = () => {
     month: selectedMonth,
   });
 
+  // Clear data when pagination parameters change (before new data arrives)
+  useEffect(() => {
+    setData([]);
+  }, [pagination.current, pagination.pageSize]);
+
   // Update local data when API data changes
   useEffect(() => {
     if (apiData?.data && Array.isArray(apiData.data)) {
-      const formattedData = apiData.data.map((item, index) => ({
-        id: item._id || index + 1,
+      const formattedData = apiData.data.map((item) => ({
+        id: item._id || Math.random().toString(),
         customerName: item.name || "-",
         email: item.email || "-",
         phone: item.phone || "-",
@@ -73,8 +92,8 @@ const SellManagement = () => {
       }));
       setData(formattedData);
 
-      // Update pagination info if available
-      if (apiData.pagination) {
+      // Update pagination total from API response
+      if (apiData.pagination?.total) {
         setPagination((prev) => ({
           ...prev,
           total: apiData.pagination.total,
@@ -150,12 +169,11 @@ const SellManagement = () => {
     });
   };
 
-  const handleTableChange = (newPagination) => {
+  const handleTableChange = (pageNumber, pageSize) => {
     setPagination({
-      current: newPagination.current,
-      pageSize: newPagination.pageSize,
+      current: pageNumber || 1,
+      pageSize: pageSize || 10,
     });
-    updateURL({ page: newPagination.current, limit: newPagination.pageSize });
   };
 
   const columns = [
@@ -164,7 +182,8 @@ const SellManagement = () => {
       dataIndex: "id",
       key: "id",
       align: "center",
-      render: (_, __, index) => index + 1,
+      render: (_, __, index) =>
+        (pagination.current - 1) * pagination.pageSize + index + 1,
     },
     {
       title: "Customer Name",
@@ -329,7 +348,7 @@ const SellManagement = () => {
           pagination={{
             current: pagination.current,
             pageSize: pagination.pageSize,
-            total: pagination.total,
+            total: pagination.total || 0,
           }}
           onPaginationChange={handleTableChange}
           rowKey="id"

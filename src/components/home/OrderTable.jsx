@@ -59,12 +59,11 @@ const OrderTable = () => {
         1,
       customerId: item.customUserId || item.id || "-",
       customerName: item.name || item.customerName || "-",
-      points: item.availablePoints || item.points || 0,
+      pointsEarned: item.totalPointsEarned || 0,
       tier: item.loyaltyTier || item.tier || "-",
-      joiningDate:
-        item.joiningDate || item.createdAt
-          ? dayjs(item.joiningDate || item.createdAt).format("DD/MM/YYYY")
-          : "-",
+      joiningDate: item.firstPurchaseAt
+        ? dayjs(item.firstPurchaseAt).format("DD/MM/YYYY")
+        : "-",
       accountStatus: item.accountStatus || item.status || "Active",
       key: index,
     }));
@@ -94,8 +93,13 @@ const OrderTable = () => {
       key: "customerName",
       align: "center",
     },
-    { title: "Points", dataIndex: "points", key: "points", align: "center" },
-    { title: "Tier", dataIndex: "tier", key: "tier", align: "center" },
+    {
+      title: "Points Earned",
+      dataIndex: "pointsEarned",
+      key: "pointsEarned",
+      align: "center",
+    },
+    // { title: "Tier", dataIndex: "tier", key: "tier", align: "center" },
     {
       title: "Joining Date",
       dataIndex: "joiningDate",

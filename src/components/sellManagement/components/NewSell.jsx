@@ -32,6 +32,23 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
   const scanBufferRef = React.useRef("");
   const scanTimeoutRef = React.useRef(null);
 
+  const selectedGrossValue = React.useMemo(() => {
+    if (
+      !digitalCardData?.promotions?.length ||
+      selectedPromotions.length === 0
+    ) {
+      return 0;
+    }
+
+    return selectedPromotions.reduce((total, promotionId) => {
+      const promotion = digitalCardData.promotions.find(
+        (item) => item._id === promotionId,
+      );
+      const grossValue = parseFloat(promotion?.grossValue) || 0;
+      return total + grossValue;
+    }, 0);
+  }, [digitalCardData, selectedPromotions]);
+
   const [findDigitalCard, { isLoading }] = useLazyFindDigitalCardQuery();
   const [requestPromotionApproval, { isLoading: isApproving }] =
     useRequestPromotionApprovalMutation();
@@ -243,6 +260,12 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
     };
   }, []);
 
+  React.useEffect(() => {
+    form.setFieldsValue({
+      discountedBill: selectedGrossValue.toFixed(2),
+    });
+  }, [form, selectedGrossValue]);
+
   const handleSubmit = async (values) => {
     // Validate approval response exists before checkout
     if (!approvalResponse) {
@@ -343,6 +366,7 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                     value={cardCode}
                     onChange={(e) => setCardCode(e.target.value)}
                     onPressEnter={handleFindCard}
+                    placeholder="Enter card code or scan now"
                   />
                   <Button
                     style={{ width: "30%" }}
@@ -360,7 +384,12 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                 name="pointEarned"
                 className="mb-3"
               >
-                <Input className="mli-tall-input" disabled />
+                <Input
+                  className="mli-tall-input"
+                  placeholder="Available points will be shown here after finding the card"
+                  disabled
+                  style={{ backgroundColor: "#f1f1f1" }}
+                />
               </Form.Item>
               <Form.Item
                 label="Total Bill Amount (Excluding Promos)"
@@ -391,8 +420,10 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                   type="number"
                   min="0"
                   step="0.01"
+                  placeholder="Enter total bill amount before applying promotions"
                 />
               </Form.Item>
+
               <Form.Item
                 label="Point Redeemed"
                 name="pointRedeemed"
@@ -427,7 +458,24 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                   },
                 ]}
               >
-                <Input className="mli-tall-input" type="number" min="0" />
+                <Input
+                  className="mli-tall-input"
+                  type="number"
+                  min="0"
+                  placeholder="Enter points to redeem (cannot exceed available points)"
+                />
+              </Form.Item>
+              {/* Gross Value */}
+              <Form.Item
+                label="Gross Value of Promotions"
+                name="discountedBill"
+              >
+                <Input
+                  className="mli-tall-input"
+                  placeholder="0.00"
+                  disabled
+                  style={{ backgroundColor: "#f1f1f1" }}
+                />
               </Form.Item>
               {/* <Form.Item label="Expiry Date" name="date" className="mb-6">
                 <DatePicker
@@ -471,7 +519,7 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                 onClick={handleApplyGiftCard}
                 loading={isApproving}
               >
-                Apply Gift Card
+                Apply Calculation
               </Button>
               <div className="flex justify-between mt-4 mb-3">
                 <Button
@@ -496,6 +544,16 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                 <p className="font-bold text-[24px] text-secondary">
                   {approvalResponse?.totalBill ||
                     form.getFieldValue("totalAmount") ||
+                    "0.00"}
+                </p>
+              </div>
+              <div className="flex justify-between">
+                <p className="font-bold text-[24px] text-secondary">
+                  Total Discounted:
+                </p>
+                <p className="font-bold text-[24px] text-secondary">
+                  {approvalResponse?.totalDiscount ||
+                    form.getFieldValue("totalDiscount") ||
                     "0.00"}
                 </p>
               </div>
@@ -531,6 +589,16 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                 </p>
                 <p className="font-bold text-[24px] text-secondary">
                   {approvalResponse?.finalBill || "0.00"}
+                </p>
+              </div>
+              <div className="flex justify-between pt-2">
+                <p className="font-bold text-[24px] text-secondary">
+                  Effective Discount %
+                </p>
+                <p className="font-bold text-[24px] text-secondary">
+                  {approvalResponse?.totalDiscount
+                    ? `${((approvalResponse?.totalDiscount / 100) * 100).toFixed(1)}%`
+                    : "0.0%"}
                 </p>
               </div>
               <Form.Item>
