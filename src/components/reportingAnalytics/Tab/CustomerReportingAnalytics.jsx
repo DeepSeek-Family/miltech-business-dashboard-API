@@ -354,7 +354,7 @@ export default function MonthlyStatsChartCustomer() {
         align: "center",
       },
       {
-        title: "Subscription Status",
+        title: "Membership Status",
         dataIndex: "SubscriptionStatus",
         key: "SubscriptionStatus",
         align: "center",
@@ -516,7 +516,7 @@ export default function MonthlyStatsChartCustomer() {
 
             <Col flex="1 1 200px">
               <Form.Item
-                label="Subscription Status"
+                label="Membership Status"
                 style={{ marginBottom: "0.5rem" }}
               >
                 <Select
