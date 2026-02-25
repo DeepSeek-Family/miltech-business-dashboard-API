@@ -9,6 +9,7 @@ import {
   useGetCustomersQuery,
   useLazyExportCustomersQuery,
 } from "../../redux/apiSlices/selleManagementSlice";
+import { useUser } from "../../provider/User";
 
 const CustomerManagement = () => {
   const [data, setData] = useState([]);
@@ -17,6 +18,7 @@ const CustomerManagement = () => {
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
   const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const { user } = useUser();
 
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -302,6 +304,7 @@ const CustomerManagement = () => {
             className="bg-primary px-8 py-5 rounded-full text-white hover:text-secondary text-[17px] font-bold"
             onClick={handleExportCustomers}
             loading={isExportLoading}
+            disabled={user?.role === "VIEW_MERCENT"}
           >
             Export
           </Button>

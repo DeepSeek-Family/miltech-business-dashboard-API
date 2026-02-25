@@ -21,6 +21,7 @@ import {
   YAxis,
 } from "recharts";
 import CustomTable from "../../common/CustomTable";
+import { useUser } from "../../../provider/User";
 
 const { Option } = Select;
 
@@ -143,6 +144,9 @@ export default function MonthlyStatsChartCustomer() {
   const [selectedPointsFilter, setSelectedPointsFilter] = useState("All");
   const [chartType, setChartType] = useState("Bar");
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
+
+  // Get user data to check role
+  const { user } = useUser();
 
   // Export mutation hook
   const [exportReport, { isLoading: isExporting }] =
@@ -619,11 +623,16 @@ export default function MonthlyStatsChartCustomer() {
                   className="mli-tall-select"
                 >
                   <Option value="all">All Metrics</Option>
-                  {metricOptions.map((option) => (
-                    <Option key={option} value={option}>
-                      {option}
-                    </Option>
-                  ))}
+                  {metricOptions
+                    .filter(
+                      (option) =>
+                        user?.role !== "VIEW_MERCENT" || option !== "Revenue",
+                    )
+                    .map((option) => (
+                      <Option key={option} value={option}>
+                        {option}
+                      </Option>
+                    ))}
                 </Select>
               </Form.Item>
             </Col>
@@ -701,15 +710,16 @@ export default function MonthlyStatsChartCustomer() {
               <YAxis />
               <Tooltip />
               <Legend />
-              {(selectedMetric === "all" || selectedMetric === "Revenue") && (
-                <Bar
-                  dataKey="Revenue"
-                  fill="#7086FD"
-                  shape={(props) => (
-                    <Custom3DBarWithWatermark {...props} dataKey="Revenue" />
-                  )}
-                />
-              )}
+              {(selectedMetric === "all" || selectedMetric === "Revenue") &&
+                user?.role !== "VIEW_MERCENT" && (
+                  <Bar
+                    dataKey="Revenue"
+                    fill="#7086FD"
+                    shape={(props) => (
+                      <Custom3DBarWithWatermark {...props} dataKey="Revenue" />
+                    )}
+                  />
+                )}
               {(selectedMetric === "all" || selectedMetric === "Users") && (
                 <Bar
                   dataKey="Users"
@@ -743,9 +753,10 @@ export default function MonthlyStatsChartCustomer() {
               <YAxis />
               <Tooltip />
               <Legend />
-              {(selectedMetric === "all" || selectedMetric === "Revenue") && (
-                <Line type="monotone" dataKey="Revenue" stroke="#7086FD" />
-              )}
+              {(selectedMetric === "all" || selectedMetric === "Revenue") &&
+                user?.role !== "VIEW_MERCENT" && (
+                  <Line type="monotone" dataKey="Revenue" stroke="#7086FD" />
+                )}
               {(selectedMetric === "all" || selectedMetric === "Users") && (
                 <Line type="monotone" dataKey="Users" stroke="#6FD195" />
               )}
@@ -768,14 +779,15 @@ export default function MonthlyStatsChartCustomer() {
               <YAxis />
               <Tooltip />
               <Legend />
-              {(selectedMetric === "all" || selectedMetric === "Revenue") && (
-                <Area
-                  type="monotone"
-                  dataKey="Revenue"
-                  stroke="#7086FD"
-                  fill="#7086FD"
-                />
-              )}
+              {(selectedMetric === "all" || selectedMetric === "Revenue") &&
+                user?.role !== "VIEW_MERCENT" && (
+                  <Area
+                    type="monotone"
+                    dataKey="Revenue"
+                    stroke="#7086FD"
+                    fill="#7086FD"
+                  />
+                )}
               {(selectedMetric === "all" || selectedMetric === "Users") && (
                 <Area
                   type="monotone"

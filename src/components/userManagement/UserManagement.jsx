@@ -11,6 +11,7 @@ import {
   useCreateUserMutation,
   useUpdateUserMutation,
 } from "../../redux/apiSlices/userManagaementSlice";
+import { useUser } from "../../provider/User";
 
 const { Option } = Select;
 
@@ -18,6 +19,8 @@ const UserManagement = () => {
   const [searchText, setSearchText] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+
+  const { user } = useUser();
 
   const queryParams = [
     { name: "page", value: page },
@@ -199,6 +202,7 @@ const UserManagement = () => {
           <Button
             onClick={() => setIsUserModalVisible(true)}
             className="bg-primary px-8 py-5 rounded-full text-white hover:text-secondary text-[17px] font-bold"
+            disabled={user?.role === "VIEW_MERCENT"}
           >
             Add New User
           </Button>

@@ -17,6 +17,7 @@ import {
   useCreatePromotionMutation,
   useDeletePromotionMutation,
 } from "../../redux/apiSlices/promoSlice.js";
+import { useUser } from "../../provider/User.jsx";
 
 const CUSTOMER_SEGMENT_MAP = {
   vip_customer: "VIP Customers",
@@ -52,6 +53,8 @@ const PromotionManagement = () => {
     const urlLimit = searchParams.get("limit");
     return urlLimit ? parseInt(urlLimit, 10) : 10;
   });
+
+  const { user } = useUser();
 
   // Sync page and limit changes to URL
   useEffect(() => {
@@ -422,7 +425,7 @@ const PromotionManagement = () => {
               <button
                 onClick={() => handleEditClick(record)}
                 className="text-primary hover:text-green-700 text-[17px] disabled:text-gray-400 disabled:cursor-not-allowed disabled:hover:text-gray-400"
-                disabled={record.status === "Inactive"}
+                disabled={record.status === "Inactive" || user?.role === "VIEW_MERCENT"}
               >
                 <FaEdit />
               </button>
@@ -430,7 +433,8 @@ const PromotionManagement = () => {
             <Tooltip title="Delete">
               <button
                 onClick={() => handleDeleteClick(record)}
-                className="text-red-500 hover:text-red-700 text-[17px]"
+                className="text-red-500 hover:text-red-700 text-[17px] disabled:text-gray-400 disabled:cursor-not-allowed disabled:hover:text-gray-400"
+                disabled={user?.role === "VIEW_MERCENT"}
               >
                 <MdDelete />
               </button>
@@ -438,6 +442,7 @@ const PromotionManagement = () => {
             <Switch
               size="small"
               checked={record.status === "Active"}
+              disabled={user?.role === "VIEW_MERCENT"}
               style={{
                 backgroundColor:
                   record.status === "Active" ? "#3fae6a" : "gray",
@@ -500,12 +505,14 @@ const PromotionManagement = () => {
           <Button
             className="bg-primary px-8 py-5 rounded-full text-white hover:text-secondary text-[17px] font-bold"
             onClick={() => setIsNotifyModalVisible(true)}
+            disabled={user?.role === "VIEW_MERCENT"}
           >
             Notification Management
           </Button>
           <Button
             className="bg-primary px-8 py-5 rounded-full text-white hover:text-secondary text-[17px] font-bold"
             onClick={() => setIsNewCampaignModalVisible(true)}
+            disabled={user?.role === "VIEW_MERCENT"}
           >
             New Promo & Discount
           </Button>

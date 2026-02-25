@@ -10,6 +10,7 @@ import {
   useDeleteTierMutation,
   useGetAllAuditLogQuery,
 } from "../../redux/apiSlices/PointTierSlice";
+import { useUser } from "../../provider/User.jsx";
 
 export default function TierSystem() {
   const [form] = Form.useForm();
@@ -20,6 +21,8 @@ export default function TierSystem() {
   const [limit, setLimit] = useState(10);
   const [auditLogPage, setAuditLogPage] = useState(1);
   const [auditLogLimit, setAuditLogLimit] = useState(10);
+
+  const { user } = useUser();
 
   // Fetch audit logs with pagination
   const auditLogQueryParams = [
@@ -197,6 +200,7 @@ export default function TierSystem() {
         <Button
           className="bg-primary px-8 py-5 rounded-full text-white hover:text-secondary text-[17px] font-bold"
           onClick={() => showRulesModal(null)}
+          disabled={user?.role === "VIEW_MERCENT"}
         >
           Add New Tier
         </Button>
@@ -245,12 +249,14 @@ export default function TierSystem() {
                   <Button
                     className="bg-primary px-6 py-3 rounded-full text-white hover:text-secondary text-[14px] font-bold"
                     onClick={() => showRulesModal(tier)}
+                    disabled={user?.role === "VIEW_MERCENT"}
                   >
                     Set Rules
                   </Button>
                   <Button
                     className="bg-red-500 border-red-500 px-6 py-3 rounded-full text-white hover:text-secondary text-[14px] font-bold"
                     onClick={() => handleRemove(tier._id)}
+                    disabled={user?.role === "VIEW_MERCENT"}
                   >
                     Remove
                   </Button>

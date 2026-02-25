@@ -15,6 +15,7 @@ import NewSell from "./components/NewSell";
 import CustomTable from "../common/CustomTable";
 import dayjs from "dayjs";
 import { useGetTodaysSellsQuery } from "../../redux/apiSlices/selleManagementSlice";
+import { useUser } from "../../provider/User";
 
 const { Option } = Select;
 
@@ -29,6 +30,9 @@ const SellManagement = () => {
   const [editingRow, setEditingRow] = useState(null);
   const [form] = Form.useForm();
   const isInitialMount = React.useRef(true);
+
+  // Get user data to check role
+  const { user } = useUser();
 
   // Initialize state from URL parameters on mount only
   useEffect(() => {
@@ -334,6 +338,7 @@ const SellManagement = () => {
             updateURL({ view: "newsell" });
           }}
           className="bg-primary px-8 py-5 rounded-full text-white hover:text-secondary text-[17px] font-bold"
+          disabled={user?.role === "VIEW_MERCENT"}
         >
           Create New Sell
         </Button>
