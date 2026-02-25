@@ -244,7 +244,8 @@ export default function MonthlyStatsChartCustomer() {
         pointsRedeemed: item.pointsRedeemed || 0,
         category: "Customer",
         region: item.location,
-        Users: Math.random() * 100,
+        Users: item.totalUsers || 0,
+        users: item.totalUsers || 0,
       };
     });
   }, [
@@ -271,29 +272,45 @@ export default function MonthlyStatsChartCustomer() {
     transformedData,
   ]);
 
-  // Generate 12 months of chart data
+  // Generate 12 months of chart data using API monthlyData or calculated data
   const chartData = useMemo(() => {
+    // If monthlyData is available from API, use it
+    if (
+      reportResponse?.data?.monthlyData &&
+      reportResponse.data.monthlyData.length > 0
+    ) {
+      return reportResponse.data.monthlyData.map((item) => ({
+        date: `${item.monthName} ${item.year}`,
+        fullDate: `${item.year}-${String(item.month).padStart(2, "0")}`,
+        Revenue: Math.round(item.totalRevenue || 0),
+        Users: Math.round(item.totalUsers || 0),
+        "Points Redeemed": Math.round(item.totalPointsRedeemed || 0),
+        "Points Accumulated": Math.round(item.totalPointsAccumulated || 0),
+      }));
+    }
+
+    // Fallback: Generate from filtered records if API data not available
     const months = [];
     const now = dayjs();
 
     for (let i = 11; i >= 0; i--) {
       const date = now.subtract(i, "month");
       const monthData = filteredData.filter(
-        (d) => dayjs(d.date).format("YYYY-MM") === date.format("YYYY-MM")
+        (d) => dayjs(d.date).format("YYYY-MM") === date.format("YYYY-MM"),
       );
 
       const sumRevenue = monthData.reduce(
         (sum, d) => sum + (d.Revenue || 0),
-        0
+        0,
       );
       const sumUsers = monthData.reduce((sum, d) => sum + (d.Users || 0), 0);
       const sumPointsRedeemed = monthData.reduce(
         (sum, d) => sum + (d["Points Redeemed"] || 0),
-        0
+        0,
       );
       const sumPointsAccumulated = monthData.reduce(
         (sum, d) => sum + (d["Points Accumulated"] || 0),
-        0
+        0,
       );
 
       months.push({
@@ -307,7 +324,7 @@ export default function MonthlyStatsChartCustomer() {
     }
 
     return months;
-  }, [filteredData]);
+  }, [reportResponse?.data?.monthlyData, filteredData]);
 
   // Generate dynamic options from transformed data
   const customerOptions = useMemo(() => {
