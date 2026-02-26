@@ -596,8 +596,8 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                   Effective Discount %
                 </p>
                 <p className="font-bold text-[24px] text-secondary">
-                  {approvalResponse?.totalDiscount
-                    ? `${((approvalResponse?.totalDiscount / 100) * 100).toFixed(1)}%`
+                  {approvalResponse?.totalBill
+                    ? `${((approvalResponse?.totalDiscount / approvalResponse?.totalBill) * 100 || 0).toFixed(2)}%`
                     : "0.0%"}
                 </p>
               </div>
