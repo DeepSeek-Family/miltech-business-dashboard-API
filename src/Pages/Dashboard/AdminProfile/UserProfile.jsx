@@ -397,6 +397,7 @@ const UserProfile = () => {
                     fontSize: "14px",
                     fontFamily: "inherit",
                   }}
+                  disabled
                 />
               </Form.Item>
             </div>

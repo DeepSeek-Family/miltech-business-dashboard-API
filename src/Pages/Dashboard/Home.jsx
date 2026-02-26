@@ -23,7 +23,7 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const Home = () => {
@@ -138,7 +138,7 @@ const Home = () => {
                 </h2>
                 <h3 className="text-secondary text-[24px] font-semibold flex items-center gap-3">
                   <Points className="w-[20px] h-[20px] text-secondary" />
-                  {response?.data?.totalPointsIssued || 0}
+                  {(response?.data?.totalPointsIssued || 0).toFixed(2)}
                 </h3>
               </div>
             </div>
