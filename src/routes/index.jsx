@@ -25,6 +25,7 @@ import PrivateRoute from "./ProtectedRoute";
 import SellManagement from "../components/sellManagement/SellManagement";
 import Success from "../components/common/Success";
 import Failed from "../components/common/Failed";
+import CurrencyConversion from "../components/currencyConversion/CurrencyConversion";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: "/reporting-analytics",
         element: <ReportingAnalytics />,
+      },
+      {
+        path: "/currency-conversion",
+        element: <CurrencyConversion />,
       },
       {
         path: "/privacy-policy",

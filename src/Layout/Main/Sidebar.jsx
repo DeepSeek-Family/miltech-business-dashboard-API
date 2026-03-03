@@ -1,8 +1,9 @@
-import { Menu, Modal, Upload, Button } from "antd";
+import { Menu, Modal, Upload, Button, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoIosLogOut } from "react-icons/io";
+import { MdCurrencyExchange } from "react-icons/md";
 
 import {
   Dashboard,
@@ -35,7 +36,6 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   const handleCancel = () => setIsLogoutModalOpen(false);
 
   // Logo upload handler
-  // Logo upload handler
   const handleLogoUpload = (file) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
@@ -50,17 +50,11 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     return false; // Prevent auto-upload
   };
 
-  <Upload beforeUpload={handleLogoUpload} showUploadList={false}>
-    <Button size="small" icon={<UploadOutlined />} className="mt-2">
-      Upload Logo
-    </Button>
-  </Upload>;
-
   const isItemActive = (itemKey) =>
     selectedKey === itemKey ||
     (itemKey === "subMenuSetting" &&
       ["/profile", "/terms-and-conditions", "/privacy-policy"].includes(
-        selectedKey
+        selectedKey,
       ));
 
   const renderIcon = (IconComponent, itemKey) => {
@@ -128,6 +122,15 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       ),
     },
     {
+      key: "/currency-conversion",
+      icon: renderIcon(MdCurrencyExchange, "/currency-conversion"),
+      label: (
+        <Link to="/currency-conversion">
+          {collapsed ? "" : "Currency Conversion"}
+        </Link>
+      ),
+    },
+    {
       key: "subMenuSetting",
       icon: renderIcon(Settings, "subMenuSetting"),
       label: collapsed ? "" : "Settings",
@@ -172,14 +175,14 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   useEffect(() => {
     const selectedItem = menuItems.find(
       (item) =>
-        item.key === path || item.children?.some((sub) => sub.key === path)
+        item.key === path || item.children?.some((sub) => sub.key === path),
     );
     if (selectedItem) {
       setSelectedKey(path);
       if (selectedItem.children) setOpenKeys([selectedItem.key]);
       else {
         const parentItem = menuItems.find((item) =>
-          item.children?.some((sub) => sub.key === path)
+          item.children?.some((sub) => sub.key === path),
         );
         if (parentItem) setOpenKeys([parentItem.key]);
       }
