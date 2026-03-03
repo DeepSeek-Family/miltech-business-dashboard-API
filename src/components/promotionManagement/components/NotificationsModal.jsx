@@ -168,64 +168,70 @@ const LocationMapPicker = ({ onLocationSelect, selectedLocation }) => {
                 onClick={() => setShowInfoWindow(!showInfoWindow)}
                 title={`Lat: ${location.lat.toFixed(4)}, Lng: ${location.lng.toFixed(4)}`}
               >
-              {showInfoWindow && (
-                <InfoWindow
-                  position={{ lat: location.lat, lng: location.lng }}
-                  onCloseClick={() => setShowInfoWindow(false)}
-                >
-                  <div
-                    style={{
-                      backgroundColor: "#fff",
-                      padding: "10px",
-                      borderRadius: "4px",
-                      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                      minWidth: "180px",
-                    }}
+                {showInfoWindow && (
+                  <InfoWindow
+                    position={{ lat: location.lat, lng: location.lng }}
+                    onCloseClick={() => setShowInfoWindow(false)}
                   >
-                    <p
+                    <div
                       style={{
-                        margin: "0 0 6px 0",
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                        color: "#1967D2",
+                        backgroundColor: "#fff",
+                        padding: "10px",
+                        borderRadius: "4px",
+                        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                        minWidth: "180px",
                       }}
                     >
-                      📍 Selected
-                    </p>
-                    <p
-                      style={{
-                        margin: "4px 0",
-                        fontSize: "12px",
-                        color: "#333",
-                      }}
-                    >
-                      <strong>Latitude:</strong>
-                      <br />
-                      {location.lat.toFixed(6)}
-                    </p>
-                    <p
-                      style={{
-                        margin: "4px 0",
-                        fontSize: "12px",
-                        color: "#333",
-                      }}
-                    >
-                      <strong>Longitude:</strong>
-                      <br />
-                      {location.lng.toFixed(6)}
-                    </p>
-                  </div>
-                </InfoWindow>
-              )}
+                      <p
+                        style={{
+                          margin: "0 0 6px 0",
+                          fontSize: "14px",
+                          fontWeight: "bold",
+                          color: "#1967D2",
+                        }}
+                      >
+                        📍 Selected
+                      </p>
+                      <p
+                        style={{
+                          margin: "4px 0",
+                          fontSize: "12px",
+                          color: "#333",
+                        }}
+                      >
+                        <strong>Latitude:</strong>
+                        <br />
+                        {location.lat.toFixed(6)}
+                      </p>
+                      <p
+                        style={{
+                          margin: "4px 0",
+                          fontSize: "12px",
+                          color: "#333",
+                        }}
+                      >
+                        <strong>Longitude:</strong>
+                        <br />
+                        {location.lng.toFixed(6)}
+                      </p>
+                    </div>
+                  </InfoWindow>
+                )}
               </Marker>
             </>
           )}
         </GoogleMap>
       </LoadScript>
-      <div className="mt-3 p-3 bg-green-50 border-2 border-green-400 rounded" style={{ animation: "pulse 2s infinite" }}>
-        <p className="text-green-900 text-sm font-bold">✓ Location Selected & Highlighted</p>
+      <div
+        className="mt-3 p-3 bg-green-50 border-2 border-green-400 rounded"
+        style={{ animation: "pulse 2s infinite" }}
+      >
+        <p className="text-green-900 text-sm font-bold">
+          ✓ Location Selected & Highlighted
+        </p>
         <p className="text-green-800 text-xs mt-2">
-          <strong>Latitude:</strong> {location.lat.toFixed(6)}<br/>
+          <strong>Latitude:</strong> {location.lat.toFixed(6)}
+          <br />
           <strong>Longitude:</strong> {location.lng.toFixed(6)}
         </p>
         <p className="text-green-700 text-xs mt-2">
@@ -271,7 +277,11 @@ const PointsInput = () => {
         },
       ]}
     >
-      <Input placeholder="" className="mli-tall-input" type="number" />
+      <Input
+        placeholder="Enter minimum points (e.g., 100)"
+        className="mli-tall-input"
+        type="number"
+      />
     </Form.Item>
   );
 };
@@ -290,7 +300,11 @@ const RadiusInput = () => {
         },
       ]}
     >
-      <Input placeholder="" className="mli-tall-input" type="number" />
+      <Input
+        placeholder="Enter radius in km (e.g., 5)"
+        className="mli-tall-input"
+        type="number"
+      />
     </Form.Item>
   );
 };
