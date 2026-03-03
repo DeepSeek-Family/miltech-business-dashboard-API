@@ -65,6 +65,10 @@ const UserProfile = () => {
   const { user } = useUser();
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
 
+  // Check if user role is ADMIN_MERCENT or VIEW_MERCENT
+  const isMerchantRole =
+    user?.role === "ADMIN_MERCENT" || user?.role === "VIEW_MERCENT";
+
   console.log(user);
 
   // Use actual user data from context
@@ -324,6 +328,10 @@ const UserProfile = () => {
                 <Input
                   placeholder="Enter your business name"
                   className="mli-tall-input"
+                  style={{
+                    backgroundColor: "#ffffff",
+                  }}
+                  disabled={isMerchantRole}
                 />
               </Form.Item>
 
@@ -413,6 +421,10 @@ const UserProfile = () => {
                 <Input
                   placeholder="Enter your website URL"
                   className="mli-tall-input"
+                  style={{
+                    backgroundColor: "#ffffff",
+                  }}
+                  disabled={isMerchantRole}
                 />
               </Form.Item>
 
@@ -427,6 +439,10 @@ const UserProfile = () => {
                 <Select
                   placeholder="Select your service"
                   className="mli-tall-select"
+                  style={{
+                    backgroundColor: "#ffffff",
+                  }}
+                  disabled={isMerchantRole}
                 >
                   <Option value="Food & beverages">Food & beverages</Option>
                   <Option value="Apparel and Footwear">
@@ -460,6 +476,10 @@ const UserProfile = () => {
                   showSearch
                   optionFilterProp="children"
                   className="mli-tall-select"
+                  style={{
+                    backgroundColor: "#ffffff",
+                  }}
+                  disabled={isMerchantRole}
                   onChange={(value) => {
                     setSelectedCountry(value);
                     form.setFieldValue("city", undefined);
@@ -489,7 +509,10 @@ const UserProfile = () => {
                   showSearch
                   optionFilterProp="children"
                   className="mli-tall-select"
-                  disabled={!selectedCountry}
+                  style={{
+                    backgroundColor: "#ffffff",
+                  }}
+                  disabled={!selectedCountry || isMerchantRole}
                 >
                   {selectedCountry &&
                     countryCityData[selectedCountry]?.map((city) => (

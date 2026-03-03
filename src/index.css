@@ -48,6 +48,15 @@
 }
 
 /* Ant Design Badge */
+
+/* Disabled Select background white */
+.ant-select-disabled .ant-select-selector {
+  background-color: #ffffff !important;
+}
+
+.ant-select:disabled .ant-select-selector {
+  background-color: #ffffff !important;
+}
 .ant-badge .ant-badge-count {
   background: #3fae6a !important;
   color: white !important;

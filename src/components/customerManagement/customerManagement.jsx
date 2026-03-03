@@ -205,7 +205,7 @@ const CustomerManagement = () => {
       align: "center",
     },
     {
-      title: "Rewords",
+      title: "Reward",
       dataIndex: "totalPointsEarned",
       key: "totalPointsEarned",
       align: "center",

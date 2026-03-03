@@ -86,7 +86,7 @@ const Header = ({ toggleSidebar, isMobile }) => {
           <span className="text-primary">
             (
             {user?.subscriptions && user.subscriptions.length > 0
-              ? "Premium Plan"
+              ? "No Plan"
               : "No Plan"}
             )
           </span>

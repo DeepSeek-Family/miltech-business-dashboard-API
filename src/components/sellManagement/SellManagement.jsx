@@ -72,10 +72,10 @@ const SellManagement = () => {
     month: selectedMonth,
   });
 
-  // Clear data when pagination parameters change (before new data arrives)
+  // Clear data when pagination or month changes
   useEffect(() => {
     setData([]);
-  }, [pagination.current, pagination.pageSize]);
+  }, [pagination.current, pagination.pageSize, selectedMonth]);
 
   // Update local data when API data changes
   useEffect(() => {
@@ -106,6 +106,14 @@ const SellManagement = () => {
     }
   }, [apiData]);
 
+  // Remove client-side month filtering since API already filters by month
+  useEffect(() => {
+    // Reset search when month changes to avoid confusion
+    if (selectedMonth) {
+      // No need to clear, data is already handled above
+    }
+  }, [selectedMonth]);
+
   const handleMonthChange = (month) => {
     setSelectedMonth(month || "");
     setPagination({ current: 1, pageSize: pagination.pageSize });
@@ -131,14 +139,12 @@ const SellManagement = () => {
   };
 
   const filteredData = data.filter((item) => {
-    const matchesMonth = selectedMonth
-      ? new Date(item.date).getMonth() + 1 === parseInt(selectedMonth)
-      : true;
+    // API already filters by month, so only filter by search text on client side
     const matchesSearch = searchText
       ? item.customerName?.toLowerCase().includes(searchText.toLowerCase()) ||
         item.email?.toLowerCase().includes(searchText.toLowerCase())
       : true;
-    return matchesMonth && matchesSearch;
+    return matchesSearch;
   });
 
   const handleNewSellSubmit = (values) => {
@@ -253,10 +259,11 @@ const SellManagement = () => {
           completed: "green",
           pending: "orange",
           failed: "red",
+          rejected: "red",
         };
         return (
           <Tag color={statusColors[status?.toLowerCase()] || "default"}>
-            {status}
+            {status?.toUpperCase()}
           </Tag>
         );
       },

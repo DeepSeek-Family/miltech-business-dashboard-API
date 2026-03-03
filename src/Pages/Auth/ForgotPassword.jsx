@@ -17,7 +17,7 @@ const ForgotPassword = () => {
       // Optionally, check res.success or server message
       message.success(res?.message || "OTP sent to your phone");
       navigate(
-        `/auth/otp-verification?phone=${encodeURIComponent(values?.identifier)}`
+        `/auth/otp-verification?phone=${encodeURIComponent(values?.identifier)}`,
       );
     } catch (err) {
       const errMsg =
@@ -46,12 +46,12 @@ const ForgotPassword = () => {
           rules={[
             {
               required: true,
-              message: "Please input your phone!",
+              message: "Please enter your phone/Email!",
             },
           ]}
         >
           <Input
-            placeholder="Enter your phone address"
+            placeholder="Enter your phone/Email"
             style={{
               height: 45,
               border: "1px solid #d9d9d9",
