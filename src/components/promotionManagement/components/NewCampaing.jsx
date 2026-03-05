@@ -351,6 +351,7 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
           name="image"
           label="Upload Image (JPG/PNG only)"
           className="mt-6"
+          rules={[{ required: true, message: "Please upload an image" }]}
         >
           <Upload
             listType="picture"

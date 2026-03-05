@@ -16,9 +16,17 @@ const ForgotPassword = () => {
       const res = await forgotPassword(payload).unwrap();
       // Optionally, check res.success or server message
       message.success(res?.message || "OTP sent to your phone");
-      navigate(
-        `/auth/otp-verification?phone=${encodeURIComponent(values?.identifier)}`,
-      );
+      const rawIdentifier = values?.identifier?.trim?.() || "";
+      const isEmail = rawIdentifier.includes("@");
+      const params = new URLSearchParams({ identifier: rawIdentifier });
+
+      if (isEmail) {
+        params.set("email", rawIdentifier);
+      } else {
+        params.set("phone", rawIdentifier);
+      }
+
+      navigate(`/auth/otp-verification?${params.toString()}`);
     } catch (err) {
       const errMsg =
         err?.data?.message ||

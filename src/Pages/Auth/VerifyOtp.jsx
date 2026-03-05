@@ -15,8 +15,11 @@ const VerifyOtp = () => {
   const [otp, setOtp] = useState("");
   const [timeLeft, setTimeLeft] = useState(180); // 3 minutes in seconds
   const [isExpired, setIsExpired] = useState(false);
-  const phone = new URLSearchParams(location.search).get("phone");
-  const type = new URLSearchParams(location.search).get("type");
+  const searchParams = new URLSearchParams(location.search);
+  const phone = searchParams.get("phone") || "";
+  const email = searchParams.get("email") || "";
+  const identifier = searchParams.get("identifier") || phone || email;
+  const type = searchParams.get("type");
   const [otpVerify, { isLoading }] = useOtpVerifyMutation();
   const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
 
@@ -55,7 +58,7 @@ const VerifyOtp = () => {
 
     try {
       const response = await otpVerify({
-        identifier: phone,
+        identifier,
         oneTimeCode: parseInt(otp, 10),
       }).unwrap();
 
@@ -80,13 +83,13 @@ const VerifyOtp = () => {
           navigate(
             `/auth/shop-info?phone=${encodeURIComponent(
               phone,
-            )}&email=${encodeURIComponent(
-              new URLSearchParams(location.search).get("email"),
-            )}`,
+            )}&email=${encodeURIComponent(email)}`,
           );
           return;
         }
-        navigate(`/auth/set-password?phone=${phone}`);
+        navigate(
+          `/auth/set-password?identifier=${encodeURIComponent(identifier)}`,
+        );
       }, 1500);
     } catch (error) {
       const errorMessage =
@@ -100,19 +103,17 @@ const VerifyOtp = () => {
   };
 
   const handleResendEmail = async () => {
-    if (!phone) {
+    if (!identifier) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Phone number is missing",
+        text: "Email or phone is missing",
       });
       return;
     }
 
     try {
-      await resendOtp({
-        phone: phone,
-      }).unwrap();
+      await resendOtp({ identifier }).unwrap();
 
       // Reset timer to 3 minutes
       setTimeLeft(180);
@@ -121,7 +122,7 @@ const VerifyOtp = () => {
       Swal.fire({
         icon: "success",
         title: "OTP Resent",
-        text: "A new OTP has been sent to your phone",
+        text: "A new OTP has been sent",
       });
       setOtp("");
     } catch (error) {
@@ -141,7 +142,7 @@ const VerifyOtp = () => {
       <div className="text-center mb-8">
         <h1 className="text-[25px] font-semibold mb-6">Verify OTP</h1>
         <p className="mx-auto text-base text-[#667085]">
-          We sent a 6-digit code to {phone || "your phone"}
+          We sent a 6-digit code to {identifier || "your email or phone"}
         </p>
         {/* <p
           className={`text-sm mt-2 font-semibold ${
