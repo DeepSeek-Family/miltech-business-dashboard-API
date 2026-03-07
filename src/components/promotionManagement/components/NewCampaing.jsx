@@ -83,18 +83,18 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
         promotionDays: initialDays,
         grossValue: editData.grossValue,
       });
+    } else if (!isEdit) {
+      // Reset form for new promotion
+      resetForm();
     }
   }, [isEdit, editData]);
 
-  // Reset form when switching to add mode so previous data doesn't persist
-  useEffect(() => {
-    if (!isEdit) {
-      form.resetFields();
-      setThumbnail("");
-      setUploadedImage([]);
-      setCheckAll(false);
-    }
-  }, [isEdit, form]);
+  const resetForm = () => {
+    form.resetFields();
+    setThumbnail("");
+    setUploadedImage([]);
+    setCheckAll(false);
+  };
 
   const handleThumbnailChange = ({ file }) => {
     if (file.status === "done" || file.originFileObj) {
@@ -130,10 +130,8 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
     }
 
     onSave(campaignData);
-    form.resetFields();
-    setThumbnail("");
-    setUploadedImage([]);
-    setCheckAll(false);
+    resetForm();
+    onCancel();
   };
 
   // Image upload validation
@@ -149,6 +147,8 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
     // Only keep the latest file (for replacement)
     const newFileList = fileList.slice(-1);
     setUploadedImage(newFileList);
+    // Update form field value
+    form.setFieldsValue({ image: newFileList });
   };
 
   const handleCheckAllChange = (e) => {
@@ -282,11 +282,13 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
               label="Discount Percentage"
               name="discountPercentage"
               rules={[
-                { required: true, message: "Please enter discount percentage" },
+                { required: true, message: "Discount percentage is required" },
                 {
                   validator: (_, value) => {
-                    if (!value) return Promise.resolve();
-                    const numValue = parseFloat(value);
+                    if (value === undefined || value === null || value === "") {
+                      return Promise.resolve();
+                    }
+                    const numValue = Number(value);
                     if (isNaN(numValue)) {
                       return Promise.reject(
                         new Error("Please enter a valid number"),
@@ -294,12 +296,12 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
                     }
                     if (numValue < 0) {
                       return Promise.reject(
-                        new Error("Discount cannot be negative"),
+                        new Error("Discount percentage cannot be negative"),
                       );
                     }
                     if (numValue > 100) {
                       return Promise.reject(
-                        new Error("Discount cannot exceed 100%"),
+                        new Error("Discount percentage cannot exceed 100%"),
                       );
                     }
                     return Promise.resolve();
@@ -309,11 +311,10 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
             >
               <Input
                 className="px-3 mli-tall-input"
-                placeholder="Enter Discount Percentage"
+                placeholder="Enter Discount Percentage (0-100)"
                 type="number"
                 min="0"
                 max="100"
-                step="0.01"
               />
             </Form.Item>
           </div>
@@ -376,14 +377,12 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
             onChange={handleUploadChange}
             onRemove={() => {
               setUploadedImage([]);
+              form.setFieldsValue({ image: [] });
             }}
             maxCount={1}
             accept=".jpg,.jpeg,.png" // Restrict file picker to JPG/PNG
           >
-            <Button
-              icon={<UploadOutlined />}
-              style={{ borderColor: "#d8d8d8", color: "#1e1e1e" }}
-            >
+            <Button icon={<UploadOutlined />}>
               {uploadedImage.length > 0 ? "Replace Image" : "Click to Upload"}
             </Button>
           </Upload>

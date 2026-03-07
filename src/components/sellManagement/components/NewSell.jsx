@@ -431,21 +431,22 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                 rules={[
                   {
                     validator: (_, value) => {
-                      if (!value) return Promise.resolve();
-                      const numValue = parseFloat(value);
-                      const availablePoints =
-                        parseFloat(form.getFieldValue("pointEarned")) || 0;
+                      if (!value && value !== 0) return Promise.resolve();
 
-                      if (isNaN(numValue)) {
+                      const availablePoints =
+                        parseInt(form.getFieldValue("pointEarned")) || 0;
+
+                      // Only integer allowed
+                      if (!/^\d+$/.test(value)) {
                         return Promise.reject(
-                          new Error("Please enter a valid number"),
+                          new Error(
+                            "Only whole numbers are allowed (no decimals)",
+                          ),
                         );
                       }
-                      if (numValue < 0) {
-                        return Promise.reject(
-                          new Error("Points cannot be negative"),
-                        );
-                      }
+
+                      const numValue = parseInt(value);
+
                       if (numValue > availablePoints) {
                         return Promise.reject(
                           new Error(
@@ -453,6 +454,7 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                           ),
                         );
                       }
+
                       return Promise.resolve();
                     },
                   },
@@ -462,7 +464,8 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                   className="mli-tall-input"
                   type="number"
                   min="0"
-                  placeholder="Enter points to redeem (cannot exceed available points)"
+                  step="1"
+                  placeholder="Enter points to redeem"
                 />
               </Form.Item>
               {/* Gross Value */}
@@ -547,7 +550,7 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                     "0.00"}
                 </p>
               </div>
-              <div className="flex justify-between">
+              {/* <div className="flex justify-between">
                 <p className="font-bold text-[24px] text-secondary">
                   Total Discounted:
                 </p>
@@ -556,7 +559,7 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                     form.getFieldValue("totalDiscount") ||
                     "0.00"}
                 </p>
-              </div>
+              </div> */}
               <div className="flex justify-between">
                 <p className="font-bold text-[24px] text-secondary">
                   Points Redeemed:
@@ -597,7 +600,7 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                 </p>
                 <p className="font-bold text-[24px] text-secondary">
                   {approvalResponse?.totalBill
-                    ? `${((approvalResponse?.totalDiscount / approvalResponse?.totalBill) * 100 || 0).toFixed(2)}%`
+                    ? `${((approvalResponse?.discountedBill / approvalResponse?.totalBill) * 100 || 0).toFixed(2)}%`
                     : "0.0%"}
                 </p>
               </div>

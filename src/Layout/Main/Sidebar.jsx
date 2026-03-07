@@ -122,15 +122,6 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       ),
     },
     {
-      key: "/currency-conversion",
-      icon: renderIcon(MdCurrencyExchange, "/currency-conversion"),
-      label: (
-        <Link to="/currency-conversion">
-          {collapsed ? "" : "Currency Conversion"}
-        </Link>
-      ),
-    },
-    {
       key: "subMenuSetting",
       icon: renderIcon(Settings, "subMenuSetting"),
       label: collapsed ? "" : "Settings",

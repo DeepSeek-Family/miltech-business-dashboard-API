@@ -48,7 +48,7 @@ const AddNewUserModal = ({
           label="User Name"
           rules={[{ required: true, message: "Please enter name" }]}
         >
-          <Input className="mli-tall-input" />
+          <Input className="mli-tall-input" placeholder="Enter user name" />
         </Form.Item>
         <Form.Item
           name="email"
@@ -142,7 +142,7 @@ const AddNewUserModal = ({
               },
             ]}
           >
-            <Input.Password className="mli-tall-input" />
+            <Input.Password className="mli-tall-input" placeholder="********" />
           </Form.Item>
         )}
         <Form.Item

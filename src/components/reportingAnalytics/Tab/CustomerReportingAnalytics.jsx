@@ -682,6 +682,7 @@ export default function MonthlyStatsChartCustomer() {
                     className="bg-primary px-6 py-[19px] rounded-md text-white hover:text-secondary text-[14px] font-bold"
                     onClick={handleExportReport}
                     loading={isExporting}
+                    disabled={user?.role === "VIEW_MERCENT"}
                   >
                     Export Report
                   </Button>
