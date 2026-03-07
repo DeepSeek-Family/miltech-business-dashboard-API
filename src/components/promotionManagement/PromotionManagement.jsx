@@ -74,6 +74,7 @@ const PromotionManagement = () => {
     isLoading,
     isFetching,
     error,
+    refetch,
   } = useGetPromoDetailsQuery(queryParams);
 
   const [togglePromoStatus] = useTogglePromoStatusMutation();
@@ -163,6 +164,9 @@ const PromotionManagement = () => {
 
       await createPromotion(formData).unwrap();
 
+      // Refetch data after successful creation
+      await refetch();
+
       setIsNewCampaignModalVisible(false);
       Swal.fire({
         icon: "success",
@@ -227,6 +231,9 @@ const PromotionManagement = () => {
         id: editingCampaign.raw._id,
         formData,
       }).unwrap();
+
+      // Refetch data after successful update
+      await refetch();
 
       setIsEditModalVisible(false);
       setEditingCampaign(null);
@@ -425,7 +432,9 @@ const PromotionManagement = () => {
               <button
                 onClick={() => handleEditClick(record)}
                 className="text-primary hover:text-green-700 text-[17px] disabled:text-gray-400 disabled:cursor-not-allowed disabled:hover:text-gray-400"
-                disabled={record.status === "Inactive" || user?.role === "VIEW_MERCENT"}
+                disabled={
+                  record.status === "Inactive" || user?.role === "VIEW_MERCENT"
+                }
               >
                 <FaEdit />
               </button>

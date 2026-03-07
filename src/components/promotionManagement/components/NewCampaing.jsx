@@ -352,7 +352,21 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
           name="image"
           label="Upload Image (JPG/PNG only)"
           className="mt-6"
-          rules={[{ required: true, message: "Please upload an image" }]}
+          rules={[
+            {
+              validator: (_, value) => {
+                // If editing and there's already an image, it's not required
+                if (isEdit && uploadedImage.length > 0) {
+                  return Promise.resolve();
+                }
+                // For new promotions or if image was removed, require upload
+                if (!uploadedImage || uploadedImage.length === 0) {
+                  return Promise.reject(new Error("Please upload an image"));
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
         >
           <Upload
             listType="picture"
