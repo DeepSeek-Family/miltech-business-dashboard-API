@@ -40,6 +40,7 @@ export const authApi = api.injectEndpoints({
         body: {
           identifier: credentials.identifier,
           password: credentials.password,
+          device: credentials.device,
         },
       }),
       transformResponse: (data) => data,

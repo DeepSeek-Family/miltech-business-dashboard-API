@@ -39,13 +39,13 @@ const Login = () => {
           localStorage.setItem("token", token);
           console.log(
             "Token saved successfully:",
-            token.substring(0, 20) + "..."
+            token.substring(0, 20) + "...",
           );
 
           if (data.data?.refreshToken || data.refreshToken) {
             localStorage.setItem(
               "refreshToken",
-              data.data?.refreshToken || data.refreshToken
+              data.data?.refreshToken || data.refreshToken,
             );
           }
 
@@ -84,6 +84,7 @@ const Login = () => {
     const payload = {
       identifier: values.email,
       password: values.password,
+      device: "merchant",
     };
 
     try {
