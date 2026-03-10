@@ -39,13 +39,13 @@ const SignUp = () => {
           localStorage.setItem("token", token);
           console.log(
             "Token saved successfully:",
-            token.substring(0, 20) + "..."
+            token.substring(0, 20) + "...",
           );
 
           if (data.data?.refreshToken || data.refreshToken) {
             localStorage.setItem(
               "refreshToken",
-              data.data?.refreshToken || data.refreshToken
+              data.data?.refreshToken || data.refreshToken,
             );
           }
 
@@ -87,10 +87,10 @@ const SignUp = () => {
       message.success("Registration successful. Please verify OTP.");
       navigate(
         `/auth/otp-verification?phone=${encodeURIComponent(
-          values.phone
+          values.phone,
         )}&email=${encodeURIComponent(values.email)}&type=${encodeURIComponent(
-          "signup"
-        )}`
+          "signup",
+        )}`,
       );
     } catch (err) {
       const errorMsg =
@@ -147,7 +147,7 @@ const SignUp = () => {
                   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                   if (!emailRegex.test(value)) {
                     return Promise.reject(
-                      new Error("Please enter a valid email address")
+                      new Error("Please enter a valid email address"),
                     );
                   }
                   return Promise.resolve();
@@ -177,7 +177,7 @@ const SignUp = () => {
                   // Validate that it's a valid phone number format
                   if (!/^\+?[1-9]\d{1,14}$/.test(value.replace(/\D/g, ""))) {
                     return Promise.reject(
-                      new Error("Please enter a valid phone number")
+                      new Error("Please enter a valid phone number"),
                     );
                   }
                   return Promise.resolve();
@@ -240,9 +240,9 @@ const SignUp = () => {
                   return Promise.reject(
                     new Error(
                       `Password must contain at least one ${missing.join(
-                        ", one "
-                      )}`
-                    )
+                        ", one ",
+                      )}`,
+                    ),
                   );
                 },
               },

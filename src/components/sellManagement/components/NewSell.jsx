@@ -275,7 +275,7 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
 
     try {
       const checkoutBody = {
-        digitalCardCode: cardCode,
+        digitalCardCode: approvalResponse.digitalCardCode,
         totalBill: approvalResponse.totalBill,
         promotionId: selectedPromotions,
         pointRedeemed: parseFloat(form.getFieldValue("pointRedeemed")) || 0,
@@ -436,16 +436,16 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                       const availablePoints =
                         parseInt(form.getFieldValue("pointEarned")) || 0;
 
-                      // Only integer allowed
-                      if (!/^\d+$/.test(value)) {
+                      // Allow decimals up to 2 places
+                      if (!/^\d+(\.\d{1,2})?$/.test(value)) {
                         return Promise.reject(
                           new Error(
-                            "Only whole numbers are allowed (no decimals)",
+                            "Only numbers up to 2 decimal places are allowed",
                           ),
                         );
                       }
 
-                      const numValue = parseInt(value);
+                      const numValue = parseFloat(value);
 
                       if (numValue > availablePoints) {
                         return Promise.reject(
@@ -464,7 +464,7 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                   className="mli-tall-input"
                   type="number"
                   min="0"
-                  step="1"
+                  step="0.01"
                   placeholder="Enter points to redeem"
                 />
               </Form.Item>

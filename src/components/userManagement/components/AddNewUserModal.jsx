@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Modal, Form, Input, Select } from "antd";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 const { Option } = Select;
 
@@ -11,6 +13,8 @@ const AddNewUserModal = ({
   roles = [],
 }) => {
   const [form] = Form.useForm();
+
+  const [phoneValue, setPhoneValue] = useState("");
 
   // Update form when editingUser changes
   React.useEffect(() => {
@@ -69,9 +73,9 @@ const AddNewUserModal = ({
             },
           ]}
         >
-          <Input className="mli-tall-input" placeholder="example@domain.com" />
+          <Input className="mli-tall-input" placeholder="Enter email" />
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           name="phone"
           label="Phone Number"
           rules={[
@@ -95,6 +99,45 @@ const AddNewUserModal = ({
           <Input
             className="mli-tall-input"
             placeholder="e.g., +1 (555) 123-4567"
+          />
+        </Form.Item> */}
+
+        <Form.Item
+          name="phone"
+          label={<p>Phone Number</p>}
+          rules={[
+            { required: true, message: "Please enter your phone number" },
+            {
+              validator: (_, value) => {
+                if (!value) return Promise.resolve();
+                // Validate that it's a valid phone number format
+                if (!/^\+?[1-9]\d{1,14}$/.test(value.replace(/\D/g, ""))) {
+                  return Promise.reject(
+                    new Error("Please enter a valid phone number"),
+                  );
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
+        >
+          <PhoneInput
+            international
+            countryCallingCodeEditable={false}
+            countries={["PK", "AE", "OM", "QA", "KW", "BH", "SA", "BD", "GB"]}
+            defaultCountry="PK"
+            value={phoneValue}
+            onChange={setPhoneValue}
+            placeholder="Enter your phone number"
+            className="phone-input-no-focus"
+            style={{
+              height: 40,
+              border: "1px solid #d8d8d8",
+              borderRadius: "8px",
+              paddingLeft: "12px",
+              fontSize: "14px",
+              fontFamily: "inherit",
+            }}
           />
         </Form.Item>
         {!editingUser && (
