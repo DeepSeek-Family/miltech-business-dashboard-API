@@ -50,7 +50,7 @@ const monthYearOptions = ["All Months"];
 const categoryOptions = ["All Categories"];
 const regionOptions = ["All Regions"];
 const CustomerOptions = ["All Customers"];
-const locationOptions = ["All Locations"];
+const locationOptions = ["All Cities"];
 const subscriptionOptions = ["All Statuses", "Active", "Inactive"];
 const paymentOptions = ["All Payments", "Paid", "Unpaid"];
 const metricOptions = ["Revenue", "Users", "Points Redeemed"];
@@ -136,7 +136,7 @@ export default function MonthlyStatsChartCustomer() {
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [selectedRegion, setSelectedRegion] = useState("All Regions");
   const [selectedCustomer, setSelectedCustomer] = useState("All Customers");
-  const [selectedLocation, setSelectedLocation] = useState("All Locations");
+  const [selectedLocation, setSelectedLocation] = useState("All Cities");
   const [selectedSubscription, setSelectedSubscription] =
     useState("All Statuses");
   const [selectedPayment, setSelectedPayment] = useState("All Payments");
@@ -169,7 +169,7 @@ export default function MonthlyStatsChartCustomer() {
           ? "inActive"
           : selectedSubscription.toLowerCase(),
     });
-  if (selectedLocation !== "All Locations")
+  if (selectedLocation !== "All Cities")
     queryParams.push({
       name: "location",
       value: selectedLocation.toLowerCase(),
@@ -263,7 +263,7 @@ export default function MonthlyStatsChartCustomer() {
       return (
         (selectedCustomer === "All Customers" ||
           d.CustomerName === selectedCustomer) &&
-        (selectedLocation === "All Locations" ||
+        (selectedLocation === "All Cities" ||
           d.Location === selectedLocation) &&
         (selectedSubscription === "All Statuses" ||
           d.SubscriptionStatus === selectedSubscription)
@@ -336,10 +336,37 @@ export default function MonthlyStatsChartCustomer() {
     return ["All Customers", ...Array.from(customers)];
   }, [transformedData]);
 
+  const cityList = [
+    "Abu Dhabi",
+    "Ajman",
+    "Birmingham",
+    "Dhaka",
+    "Doha",
+    "Dubai",
+    "Fujairah",
+    "Glasgow",
+    "Islamabad",
+    "Jeddah",
+    "Karachi",
+    "Kuwait City",
+    "Lahore",
+    "Liverpool",
+    "London",
+    "Manchester",
+    "Manama",
+    "Muscat",
+    "Peshawar",
+    "Quetta",
+    "Ras Al Khaimah",
+    "Rawalpindi",
+    "Riyadh",
+    "Sharjah",
+    "Umm Al Quwain",
+  ];
+
   const dynamicLocationOptions = useMemo(() => {
-    const locations = new Set(transformedData.map((d) => d.Location));
-    return ["All Locations", ...Array.from(locations)];
-  }, [transformedData]);
+    return ["All Cities", ...cityList];
+  }, []);
 
   const columns = useMemo(() => {
     const baseColumns = [
@@ -512,12 +539,12 @@ export default function MonthlyStatsChartCustomer() {
             </Col>
 
             <Col flex="1 1 200px">
-              <Form.Item label="Location" style={{ marginBottom: "0.5rem" }}>
+              <Form.Item label="City" style={{ marginBottom: "0.5rem" }}>
                 <Select
                   showSearch
                   value={selectedLocation}
                   style={{ width: "100%" }}
-                  placeholder="Select a location"
+                  placeholder="Select a city"
                   optionFilterProp="children"
                   onChange={setSelectedLocation}
                   className="mli-tall-select"
@@ -667,7 +694,7 @@ export default function MonthlyStatsChartCustomer() {
                       setSelectedCategory("All Categories");
                       setSelectedRegion("All Regions");
                       setSelectedCustomer("All Customers");
-                      setSelectedLocation("All Locations");
+                      setSelectedLocation("All Cities");
                       setSelectedSubscription("All Statuses");
                       setSelectedPayment("All Payments");
                       setSelectedMetric("all");
