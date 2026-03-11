@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import BarChart from "./BarChart";
 import {
   Chart as ChartJS,
@@ -16,6 +17,7 @@ import { Sales } from "../../components/common/Svg";
 import { Points } from "../../components/common/Svg";
 import PieChart from "./PieChart";
 import { useGetStatsQuery } from "../../redux/apiSlices/homeSlice";
+import { useUser } from "../../provider/User";
 
 ChartJS.register(
   CategoryScale,
@@ -27,8 +29,18 @@ ChartJS.register(
 );
 
 const Home = () => {
+  const navigate = useNavigate();
+  const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState("7d");
+
+  // Redirect VIEW_MERCENT to Sell Management
+  useEffect(() => {
+    const userRole = user?.user?.role || user?.role;
+    if (userRole === "VIEW_MERCENT") {
+      navigate("/sell-management", { replace: true });
+    }
+  }, [user, navigate]);
 
   // Map display text to API values
   const optionsMap = {

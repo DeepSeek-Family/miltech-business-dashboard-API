@@ -466,6 +466,7 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                   min="0"
                   step="0.01"
                   placeholder="Enter points to redeem"
+                  disabled={cardCode && cardCode.includes("PC")}
                 />
               </Form.Item>
               {/* Gross Value */}
@@ -521,6 +522,11 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                 className="w-full bg-primary text-white mt-4 text-[16px] font-bold p-5"
                 onClick={handleApplyGiftCard}
                 loading={isApproving}
+                disabled={
+                  cardCode &&
+                  cardCode.includes("PC") &&
+                  selectedPromotions.length === 0
+                }
               >
                 Apply Calculation
               </Button>

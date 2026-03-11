@@ -1,9 +1,7 @@
 import { Menu, Modal, Upload, Button, message } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoIosLogOut } from "react-icons/io";
-import { MdCurrencyExchange } from "react-icons/md";
 
 import {
   Dashboard,
@@ -72,12 +70,20 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     );
   };
 
+  // Check user role
+  const userRole = user?.user?.role || user?.role;
+  const isViewMerchant = userRole === "VIEW_MERCENT";
+
   const menuItems = [
-    {
-      key: "/",
-      icon: renderIcon(Dashboard, "/"),
-      label: <Link to="/">{collapsed ? "" : "Dashboard Overview"}</Link>,
-    },
+    ...(isViewMerchant
+      ? []
+      : [
+          {
+            key: "/",
+            icon: renderIcon(Dashboard, "/"),
+            label: <Link to="/">{collapsed ? "" : "Dashboard Overview"}</Link>,
+          },
+        ]),
     {
       key: "/sell-management",
       icon: renderIcon(Sales, "/sell-management"),
@@ -130,14 +136,18 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
           key: "/profile",
           label: <Link to="/profile">{collapsed ? "" : "Update Profile"}</Link>,
         },
-        {
-          key: "/user-management",
-          label: (
-            <Link to="/user-management">
-              {collapsed ? "" : "User Management"}
-            </Link>
-          ),
-        },
+        ...(isViewMerchant
+          ? []
+          : [
+              {
+                key: "/user-management",
+                label: (
+                  <Link to="/user-management">
+                    {collapsed ? "" : "User Management"}
+                  </Link>
+                ),
+              },
+            ]),
         {
           key: "/terms-and-conditions",
           label: (

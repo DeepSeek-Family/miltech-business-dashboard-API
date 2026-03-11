@@ -56,9 +56,14 @@ const Login = () => {
             console.warn("Profile fetch delayed:", error);
           }
 
-          // Add delay and navigate to dashboard
+          // Check role and redirect accordingly
+          const userRole = data.data?.user?.role || data.data?.role;
+          const redirectPath =
+            userRole === "VIEW_MERCENT" ? "/sell-management" : "/";
+
+          // Add delay and navigate
           setTimeout(() => {
-            navigate("/", { replace: true });
+            navigate(redirectPath, { replace: true });
           }, 500);
         } else {
           message.error("Token not found in response");
@@ -105,8 +110,13 @@ const Login = () => {
         console.warn("Profile fetch delayed:", error);
       }
 
-      // Navigate to dashboard
-      navigate("/", { replace: true });
+      // Check role and redirect accordingly
+      const userRole = result?.data?.user?.role || result?.data?.role;
+      const redirectPath =
+        userRole === "VIEW_MERCENT" ? "/sell-management" : "/";
+
+      // Navigate to appropriate dashboard
+      navigate(redirectPath, { replace: true });
     } catch (err) {
       message.error(err?.data?.message || "Login failed!");
     }
