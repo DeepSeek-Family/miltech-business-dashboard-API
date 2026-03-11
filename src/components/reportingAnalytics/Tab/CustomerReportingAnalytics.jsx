@@ -39,7 +39,7 @@ const data = [
     PaymentStatus: "Paid",
     DaysToExpire: 30,
     Revenue: 100,
-    Users: 65,
+    Visits: 65,
     "Points Redeemed": 32,
     "Points Accumulated": 45,
   },
@@ -53,12 +53,12 @@ const CustomerOptions = ["All Customers"];
 const locationOptions = ["All Cities"];
 const subscriptionOptions = ["All Statuses", "Active", "Inactive"];
 const paymentOptions = ["All Payments", "Paid", "Unpaid"];
-const metricOptions = ["Revenue", "Users", "Points Redeemed"];
+const metricOptions = ["Revenue", "Visits", "Points Redeemed"];
 const pointsFilterOptions = ["All", "Points Redeemed", "Points Accumulated"];
 
 const maxValues = {
   Revenue: Math.max(...data.map((d) => d.Revenue)),
-  Users: Math.max(...data.map((d) => d.Users)),
+  Visits: Math.max(...data.map((d) => d.Visits)),
   "Points Redeemed": Math.max(...data.map((d) => d["Points Redeemed"])),
   "Points Accumulated": Math.max(...data.map((d) => d["Points Accumulated"])),
 };
@@ -248,8 +248,8 @@ export default function MonthlyStatsChartCustomer() {
         pointsRedeemed: item.pointsRedeemed || 0,
         category: "Customer",
         region: item.location,
-        Users: item.totalUsers || 0,
-        users: item.totalUsers || 0,
+        Visits: item.totalUsers || 0,
+        visits: item.totalUsers || 0,
       };
     });
   }, [
@@ -287,7 +287,7 @@ export default function MonthlyStatsChartCustomer() {
         date: `${item.monthName} ${item.year}`,
         fullDate: `${item.year}-${String(item.month).padStart(2, "0")}`,
         Revenue: Math.round(item.totalRevenue || 0),
-        Users: Math.round(item.totalUsers || 0),
+        Visits: Math.round(item.totalUsers || 0),
         "Points Redeemed": Math.round(item.totalPointsRedeemed || 0),
         "Points Accumulated": Math.round(item.totalPointsAccumulated || 0),
       }));
@@ -307,7 +307,7 @@ export default function MonthlyStatsChartCustomer() {
         (sum, d) => sum + (d.Revenue || 0),
         0,
       );
-      const sumUsers = monthData.reduce((sum, d) => sum + (d.Users || 0), 0);
+      const sumVisits = monthData.reduce((sum, d) => sum + (d.Visits || 0), 0);
       const sumPointsRedeemed = monthData.reduce(
         (sum, d) => sum + (d["Points Redeemed"] || 0),
         0,
@@ -321,7 +321,7 @@ export default function MonthlyStatsChartCustomer() {
         date: date.format("MMM YYYY"),
         fullDate: date.format("YYYY-MM-DD"),
         Revenue: Math.round(sumRevenue),
-        Users: Math.round(sumUsers),
+        Visits: Math.round(sumVisits),
         "Points Redeemed": Math.round(sumPointsRedeemed),
         "Points Accumulated": Math.round(sumPointsAccumulated),
       });
@@ -748,12 +748,12 @@ export default function MonthlyStatsChartCustomer() {
                     )}
                   />
                 )}
-              {(selectedMetric === "all" || selectedMetric === "Users") && (
+              {(selectedMetric === "all" || selectedMetric === "Visits") && (
                 <Bar
-                  dataKey="Users"
+                  dataKey="Visits"
                   fill="#6FD195"
                   shape={(props) => (
-                    <Custom3DBarWithWatermark {...props} dataKey="Users" />
+                    <Custom3DBarWithWatermark {...props} dataKey="Visits" />
                   )}
                 />
               )}
@@ -785,8 +785,8 @@ export default function MonthlyStatsChartCustomer() {
                 user?.role !== "VIEW_MERCENT" && (
                   <Line type="monotone" dataKey="Revenue" stroke="#7086FD" />
                 )}
-              {(selectedMetric === "all" || selectedMetric === "Users") && (
-                <Line type="monotone" dataKey="Users" stroke="#6FD195" />
+              {(selectedMetric === "all" || selectedMetric === "Visits") && (
+                <Line type="monotone" dataKey="Visits" stroke="#6FD195" />
               )}
               {(selectedMetric === "all" ||
                 selectedMetric === "Points Redeemed") && (
@@ -816,10 +816,10 @@ export default function MonthlyStatsChartCustomer() {
                     fill="#7086FD"
                   />
                 )}
-              {(selectedMetric === "all" || selectedMetric === "Users") && (
+              {(selectedMetric === "all" || selectedMetric === "Visits") && (
                 <Area
                   type="monotone"
-                  dataKey="Users"
+                  dataKey="Visits"
                   stroke="#6FD195"
                   fill="#6FD195"
                 />
