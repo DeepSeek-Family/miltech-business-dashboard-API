@@ -174,6 +174,11 @@ export default function MonthlyStatsChartCustomer() {
       name: "location",
       value: selectedLocation.toLowerCase(),
     });
+  if (selectedPayment !== "All Payments")
+    queryParams.push({
+      name: "paymentStatus",
+      value: selectedPayment.toLowerCase(),
+    });
   // Add pagination parameters
   queryParams.push({
     name: "page",
@@ -240,6 +245,8 @@ export default function MonthlyStatsChartCustomer() {
         location: item.location || "-",
         SubscriptionStatus: normalizedStatus,
         subscriptionStatus: item.subscriptionStatus || "-",
+        PaymentStatus: item.paymentStatus || "-",
+        paymentStatus: item.paymentStatus || "-",
         Revenue: item.revenue || 0,
         revenue: item.revenue || 0,
         "Points Accumulated": item.pointsAccumulated || 0,
@@ -266,13 +273,16 @@ export default function MonthlyStatsChartCustomer() {
         (selectedLocation === "All Cities" ||
           d.Location === selectedLocation) &&
         (selectedSubscription === "All Statuses" ||
-          d.SubscriptionStatus === selectedSubscription)
+          d.SubscriptionStatus === selectedSubscription) &&
+        (selectedPayment === "All Payments" ||
+          d.PaymentStatus?.toLowerCase() === selectedPayment.toLowerCase())
       );
     });
   }, [
     selectedCustomer,
     selectedSubscription,
     selectedLocation,
+    selectedPayment,
     transformedData,
   ]);
 
@@ -410,6 +420,23 @@ export default function MonthlyStatsChartCustomer() {
           <span
             className={
               status === "Active"
+                ? "text-green-600 font-semibold"
+                : "text-red-600 font-semibold"
+            }
+          >
+            {status}
+          </span>
+        ),
+      },
+      {
+        title: "Payment Status",
+        dataIndex: "PaymentStatus",
+        key: "PaymentStatus",
+        align: "center",
+        render: (status) => (
+          <span
+            className={
+              status?.toLowerCase() === "paid"
                 ? "text-green-600 font-semibold"
                 : "text-red-600 font-semibold"
             }
