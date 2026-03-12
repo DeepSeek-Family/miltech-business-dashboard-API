@@ -384,13 +384,13 @@ export default function MonthlyStatsChartCustomer() {
         render: (date) => (date ? dayjs(date).format("DD/MM/YYYY HH:mm") : "-"),
       },
       {
-        title: "Customer ID",
+        title: "Business ID",
         dataIndex: "customerId",
         key: "customerId",
         align: "center",
       },
       {
-        title: "Customer Name",
+        title: "Business Name",
         dataIndex: "CustomerName",
         key: "CustomerName",
         align: "center",
@@ -513,7 +513,7 @@ export default function MonthlyStatsChartCustomer() {
 
             <Col flex="1 1 200px">
               <Form.Item
-                label={<span className="mli-custom-label">Customer Name</span>}
+                label={<span className="mli-custom-label">Business Name</span>}
                 style={{ marginBottom: "0.5rem" }}
               >
                 <Select
