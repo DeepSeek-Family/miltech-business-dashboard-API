@@ -15,6 +15,7 @@
     "@reduxjs/toolkit": "^2.2.7",
     "antd": "^5.20.3",
     "chart.js": "^4.4.8",
+    "firebase": "^12.10.0",
     "html2canvas": "^1.4.1",
     "html5-qrcode": "^2.3.8",
     "i18next": "^23.4.6",

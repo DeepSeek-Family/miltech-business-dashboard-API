@@ -12,6 +12,11 @@ import { Toaster } from "react-hot-toast";
 import { UserProvider } from "./provider/User.jsx";
 import { ConfigProvider } from "antd";
 
+// Register Service Worker for FCM
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/firebase-messaging-sw.js");
+}
+
 i18next.init({
   interpolation: {
     escapeValue: false, // not needed for react as it escapes by default

@@ -41,6 +41,7 @@ export const authApi = api.injectEndpoints({
           identifier: credentials.identifier,
           password: credentials.password,
           device: credentials.device,
+          fcmToken: credentials.fcmToken,
         },
       }),
       transformResponse: (data) => data,
