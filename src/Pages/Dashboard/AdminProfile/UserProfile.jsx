@@ -627,6 +627,7 @@ const UserProfile = () => {
                 marginTop: "8px",
                 fontSize: "12px",
                 color: "#666",
+                paddingTop: "25px",
               }}
             >
               Tip: Use 400x200px JPG/PNG, max 2MB. Click the image or area to
