@@ -1,50 +1,79 @@
 import { messaging } from "../config/firebaseConfig";
-import { getToken } from "firebase/messaging";
+import { getToken, isSupported } from "firebase/messaging";
+
+const SW_PATH = "/firebase-messaging-sw.js";
+
+const VAPID_KEY =
+  import.meta.env.VITE_FIREBASE_VAPID_KEY ||
+  "BOgebeEZSqwM2VX5GIAQ071FfCVCvgn26_h6V-xS65uK76xiY9IlwMa_-M3Ifh-D1UMb4HyUsUf6t9tPJr7ed5Y";
+
+/**
+ * Ensures the FCM service worker is registered and active, then returns that
+ * registration for getToken(). Without this, getToken() often returns null on
+ * localhost until the SW race is resolved.
+ */
+async function getFcmServiceWorkerRegistration() {
+  if (!("serviceWorker" in navigator)) {
+    return undefined;
+  }
+  try {
+    const registration = await navigator.serviceWorker.register(SW_PATH, {
+      scope: "/",
+    });
+    await navigator.serviceWorker.ready;
+    return registration;
+  } catch (e) {
+    console.error("[FCM] Service worker registration failed:", e);
+    return undefined;
+  }
+}
 
 export const getFCMToken = async () => {
   try {
-    console.log("🔧 getFCMToken called");
-    console.log("messaging object:", messaging);
-
-    if (!messaging) {
-      console.error("❌ Firebase messaging is NULL");
+    const supported = await isSupported();
+    if (!supported) {
+      console.warn("[FCM] Messaging is not supported in this browser.");
       return null;
     }
 
-    console.log("✓ Messaging initialized");
+    if (!messaging) {
+      console.error("[FCM] Firebase messaging is null (check firebaseConfig).");
+      return null;
+    }
 
-    // Request notification permission
     if (Notification.permission !== "granted") {
-      console.log("📢 Requesting notification permission...");
       const permission = await Notification.requestPermission();
-      console.log("Permission result:", permission);
       if (permission !== "granted") {
-        console.warn("⚠️  Permission denied");
+        console.warn("[FCM] Notification permission denied.");
         return null;
       }
     }
 
-    console.log("✓ Notification permission granted");
-    console.log("🔑 VAPID Key:", import.meta.env.VITE_FIREBASE_VAPID_KEY ? "✓ Set" : "❌ Missing");
+    const serviceWorkerRegistration = await getFcmServiceWorkerRegistration();
 
-    // Get FCM token
-    console.log("📡 Requesting getToken...");
-    const token = await getToken(messaging, {
-      vapidKey: "BOgebeEZSqwM2VX5GIAQ071FfCVCvgn26_h6V-xS65uK76xiY9IlwMa_-M3Ifh-D1UMb4HyUsUf6t9tPJr7ed5Y",
-    });
+    const tokenOptions = {
+      vapidKey: VAPID_KEY,
+      ...(serviceWorkerRegistration && { serviceWorkerRegistration }),
+    };
+
+    let token = await getToken(messaging, tokenOptions);
+
+    if (!token && serviceWorkerRegistration) {
+      await new Promise((r) => setTimeout(r, 400));
+      token = await getToken(messaging, tokenOptions);
+    }
 
     if (token) {
-      console.log("✅ FCM Token received:", token.substring(0, 40) + "...");
       localStorage.setItem("fcmToken", token);
       return token;
-    } else {
-      console.error("❌ getToken returned null");
-      return null;
     }
+
+    console.error(
+      "[FCM] getToken returned empty — confirm Web Push key in Firebase Console matches VITE_FIREBASE_VAPID_KEY / VAPID in code.",
+    );
+    return null;
   } catch (error) {
-    console.error("❌ Error in getFCMToken:", error);
-    console.error("Error message:", error.message);
-    console.error("Error code:", error.code);
+    console.error("[FCM] getFCMToken error:", error?.code, error?.message, error);
     return null;
   }
 };

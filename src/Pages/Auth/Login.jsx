@@ -6,7 +6,7 @@ import image4 from "../../assets/image4.png";
 import { useLoginMutation } from "../../redux/apiSlices/authSlice";
 import { useUser } from "../../provider/User";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { getFCMToken } from "../../utils/fcmService";
+import { getFCMToken, getStoredFCMToken } from "../../utils/fcmService";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,8 +17,10 @@ const Login = () => {
   const handleGoogleSuccess = async (credentialResponse) => {
     setGoogleLoading(true);
     try {
-      // Get FCM token
-      const fcmToken = await getFCMToken();
+      let fcmToken = await getFCMToken();
+      if (!fcmToken) {
+        fcmToken = getStoredFCMToken();
+      }
 
       const googlePayload = {
         idToken: credentialResponse.credential,
@@ -101,23 +103,19 @@ const Login = () => {
     
     // Get FCM token
     console.log("🔄 Getting FCM token...");
-    const fcmToken = await getFCMToken();
+    let fcmToken = await getFCMToken();
+    if (!fcmToken) {
+      fcmToken = getStoredFCMToken();
+    }
     console.log("✓ FCM Token result:", fcmToken ? "✅ Got token" : "❌ No token");
-    console.log("Token:", fcmToken);
 
     const payload = {
       identifier: values.email,
       password: values.password,
       device: "merchant",
-      fcmToken: fcmToken || undefined, // Include token if available
     };
-
-    // Add FCM token if available
     if (fcmToken) {
       payload.fcmToken = fcmToken;
-      console.log("✅ FCM token added to payload");
-    } else {
-      console.warn("⚠️  No FCM token, proceeding without it");
     }
 
     console.log("📤 Final payload:", payload);

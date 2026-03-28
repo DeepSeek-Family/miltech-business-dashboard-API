@@ -1,5 +1,10 @@
-importScripts("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js");
-importScripts("https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js");
+// Firebase compat build — keep version aligned with `firebase` in package.json.
+importScripts(
+  "https://www.gstatic.com/firebasejs/12.0.0/firebase-app-compat.js",
+);
+importScripts(
+  "https://www.gstatic.com/firebasejs/12.0.0/firebase-messaging-compat.js",
+);
 
 const firebaseConfig = {
   apiKey: "AIzaSyCS1lgyDYsx5nD4E-LIMlhjWBuR9r6UmVQ",
@@ -14,7 +19,6 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  console.log("Background message:", payload);
   const notificationTitle = payload.notification?.title || "Notification";
   const notificationOptions = {
     body: payload.notification?.body || "New message",

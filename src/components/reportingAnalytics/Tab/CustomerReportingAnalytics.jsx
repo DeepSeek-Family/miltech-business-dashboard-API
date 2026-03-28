@@ -540,7 +540,7 @@ export default function MonthlyStatsChartCustomer() {
 
             <Col flex="1 1 200px">
               <Form.Item
-                label={<span className="mli-custom-label">Business Name</span>}
+                label={<span className="mli-custom-label">Customers Name</span>}
                 style={{ marginBottom: "0.5rem" }}
               >
                 <Select

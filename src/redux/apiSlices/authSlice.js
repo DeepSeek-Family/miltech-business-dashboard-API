@@ -34,16 +34,21 @@ export const authApi = api.injectEndpoints({
     // LOGIN
     // ---------------------------------------
     login: builder.mutation({
-      query: (credentials) => ({
-        url: "/auth/login",
-        method: "POST",
-        body: {
+      query: (credentials) => {
+        const body = {
           identifier: credentials.identifier,
           password: credentials.password,
           device: credentials.device,
-          fcmToken: credentials.fcmToken,
-        },
-      }),
+        };
+        if (credentials.fcmToken) {
+          body.fcmToken = credentials.fcmToken;
+        }
+        return {
+          url: "/auth/login",
+          method: "POST",
+          body,
+        };
+      },
       transformResponse: (data) => data,
 
       invalidatesTags: ["Profile"],

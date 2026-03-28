@@ -91,7 +91,7 @@ const CustomerManagement = () => {
         pointsRedeemed: item.totalPointsRedeemed || 0,
         remainingRedemptionPoints: item.availablePoints || 0,
         totalTransactions: item.totalTransactions || 0,
-        totalPointsEarned: item.totalPointsEarned || 0,
+        // totalPointsEarned: item.totalPointsEarned || 0,
         cardIds: item.cardIds || "-",
       }));
       setData(formattedData);
