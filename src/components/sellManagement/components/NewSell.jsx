@@ -419,7 +419,6 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                   className="mli-tall-input"
                   type="number"
                   min="0"
-                  step="0.01"
                   placeholder="Enter total bill amount before applying promotions"
                 />
               </Form.Item>
@@ -464,7 +463,6 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                   className="mli-tall-input"
                   type="number"
                   min="0"
-                  step="0.01"
                   placeholder="Enter points to redeem"
                   disabled={cardCode && cardCode.includes("PC")}
                 />

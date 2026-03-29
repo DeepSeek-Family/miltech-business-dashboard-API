@@ -95,14 +95,6 @@ const SellManagement = () => {
         date: item.date || new Date().toISOString().split("T")[0],
       }));
       setData(formattedData);
-
-      // Update pagination total from API response
-      if (apiData.pagination?.total) {
-        setPagination((prev) => ({
-          ...prev,
-          total: apiData.pagination.total,
-        }));
-      }
     }
   }, [apiData]);
 
@@ -138,14 +130,7 @@ const SellManagement = () => {
     setSearchParams(newParams);
   };
 
-  const filteredData = data.filter((item) => {
-    // API already filters by month, so only filter by search text on client side
-    const matchesSearch = searchText
-      ? item.customerName?.toLowerCase().includes(searchText.toLowerCase()) ||
-        item.email?.toLowerCase().includes(searchText.toLowerCase())
-      : true;
-    return matchesSearch;
-  });
+  const filteredData = data;
 
   const handleNewSellSubmit = (values) => {
     message.success("Transaction completed successfully!");
@@ -180,6 +165,7 @@ const SellManagement = () => {
   };
 
   const handleTableChange = (pageNumber, pageSize) => {
+    setData([]); // Clear data immediately when pagination changes
     setPagination({
       current: pageNumber || 1,
       pageSize: pageSize || 10,
@@ -360,7 +346,7 @@ const SellManagement = () => {
           pagination={{
             current: pagination.current,
             pageSize: pagination.pageSize,
-            total: pagination.total || 0,
+            total: apiData?.pagination?.total || 0,
           }}
           onPaginationChange={handleTableChange}
           rowKey="id"

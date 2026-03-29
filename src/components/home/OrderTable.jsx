@@ -59,7 +59,7 @@ const OrderTable = () => {
         1,
       customerId: item.customUserId || item.id || "-",
       customerName: item.name || item.customerName || "-",
-      pointsEarned: item.totalPointsEarned || 0,
+      pointsEarned: (item.totalPointsEarned || 0).toFixed(2),
       tier: item.loyaltyTier || item.tier || "-",
       joiningDate: item.firstPurchaseAt
         ? dayjs(item.firstPurchaseAt).format("DD/MM/YYYY")
