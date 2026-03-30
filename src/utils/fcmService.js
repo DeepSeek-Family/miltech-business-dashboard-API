@@ -1,5 +1,5 @@
 import { messaging } from "../config/firebaseConfig";
-import { getToken, isSupported } from "firebase/messaging";
+import { getToken, isSupported, onMessage } from "firebase/messaging";
 
 const SW_PATH = "/firebase-messaging-sw.js";
 
@@ -68,6 +68,34 @@ async function requestNotificationPermission() {
   }
 }
 
+/**
+ * Show a notification to the user
+ */
+export const showNotification = (title, options = {}) => {
+  try {
+    if (!("Notification" in window)) {
+      console.warn("[Notification] API not supported");
+      return;
+    }
+
+    if (Notification.permission !== "granted") {
+      console.warn("[Notification] Permission not granted");
+      return;
+    }
+
+    const notificationOptions = {
+      icon: "/favicon.ico",
+      badge: "/favicon.ico",
+      ...options,
+    };
+
+    new Notification(title, notificationOptions);
+    console.log("[Notification] Notification shown:", title);
+  } catch (error) {
+    console.error("[Notification] Error showing notification:", error);
+  }
+};
+
 export const getFCMToken = async () => {
   try {
     const supported = await isSupported();
@@ -130,6 +158,43 @@ export const getStoredFCMToken = () => {
   }
   // Return device ID as fallback
   return generateDeviceId();
+};
+
+/**
+ * Initialize foreground message handler
+ * This displays notifications when the app is open/in focus
+ */
+export const setupForegroundMessageHandler = () => {
+  try {
+    if (!messaging) {
+      console.warn("[FCM] Messaging not available for foreground handler");
+      return;
+    }
+
+    onMessage(messaging, (payload) => {
+      console.log("[FCM] Foreground message received:", payload);
+
+      const title = payload.notification?.title || "Notification";
+      const options = {
+        body: payload.notification?.body || "New message",
+        icon: payload.notification?.icon || "/favicon.ico",
+        tag: payload.messageId || "notification",
+        data: payload.data || {},
+      };
+
+      // Show notification
+      showNotification(title, options);
+
+      // Additional handling based on data payload
+      if (payload.data) {
+        console.log("[FCM] Message data:", payload.data);
+      }
+    });
+
+    console.log("[FCM] Foreground message handler initialized");
+  } catch (error) {
+    console.error("[FCM] Error setting up foreground handler:", error);
+  }
 };
 
 export const clearFCMToken = () => {

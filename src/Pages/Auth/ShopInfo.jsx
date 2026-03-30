@@ -203,7 +203,12 @@ const ShopInfo = () => {
         {/* City Dropdown */}
         <Form.Item
           name="city"
-          rules={[{ required: true, message: "Please select your City (State/Province)" }]}
+          rules={[
+            {
+              required: true,
+              message: "Please select your City (State/Province)",
+            },
+          ]}
         >
           <Select
             placeholder="Select Your City (State/Province)"
@@ -236,11 +241,11 @@ const ShopInfo = () => {
               height: 45,
             }}
           >
-            <Option value="Food and Beverages">Food and Beverages</Option>
-            <Option value="Apparel & Footwear">Apparel & Footwear</Option>
+            <Option value="Food & Beverages">Food & Beverages</Option>
+            <Option value="Apparel and Footwear">Apparel and Footwear</Option>
             <Option value="Accessories">Accessories</Option>
             <Option value="Health & Beauty">Health & Beauty</Option>
-            <Option value="Salon & Spas">Salon & Spas</Option>
+            <Option value="Salons & Spas">Salons & Spas</Option>
             <Option value="Leisure & Entertainment">
               Leisure & Entertainment
             </Option>

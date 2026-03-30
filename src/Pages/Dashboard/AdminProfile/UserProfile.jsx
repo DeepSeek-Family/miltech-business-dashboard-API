@@ -444,7 +444,7 @@ const UserProfile = () => {
                   }}
                   disabled={isMerchantRole}
                 >
-                  <Option value="Food & beverages">Food & beverages</Option>
+                  <Option value="Food & Beverages">Food & Beverages</Option>
                   <Option value="Apparel and Footwear">
                     Apparel and Footwear
                   </Option>

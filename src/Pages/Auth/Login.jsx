@@ -25,12 +25,8 @@ const Login = () => {
       const googlePayload = {
         idToken: credentialResponse.credential,
         role: "MERCENT",
+        fcmToken: fcmToken, // Always include token
       };
-
-      // Add FCM token if available
-      if (fcmToken) {
-        googlePayload.fcmToken = fcmToken;
-      }
 
       const response = await fetch("http://10.10.7.8:5004/api/v1/auth/google", {
         method: "POST",
@@ -100,23 +96,24 @@ const Login = () => {
 
   const onFinish = async (values) => {
     console.log("📝 Login started...");
-    
+
     // Get FCM token
     console.log("🔄 Getting FCM token...");
     let fcmToken = await getFCMToken();
     if (!fcmToken) {
       fcmToken = getStoredFCMToken();
     }
-    console.log("✓ FCM Token result:", fcmToken ? "✅ Got token" : "❌ No token");
+    console.log(
+      "✓ Token result:",
+      fcmToken ? `✅ ${fcmToken.substring(0, 20)}...` : "❌ No token",
+    );
 
     const payload = {
       identifier: values.email,
       password: values.password,
       device: "merchant",
+      fcmToken: fcmToken, // Always include token (FCM or device ID)
     };
-    if (fcmToken) {
-      payload.fcmToken = fcmToken;
-    }
 
     console.log("📤 Final payload:", payload);
 
