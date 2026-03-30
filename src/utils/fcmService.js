@@ -8,6 +8,19 @@ const VAPID_KEY =
   "BOgebeEZSqwM2VX5GIAQ071FfCVCvgn26_h6V-xS65uK76xiY9IlwMa_-M3Ifh-D1UMb4HyUsUf6t9tPJr7ed5Y";
 
 /**
+ * Generates a fallback device ID when FCM is not available
+ */
+function generateDeviceId() {
+  let deviceId = localStorage.getItem("deviceId");
+  if (!deviceId) {
+    deviceId = `device_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem("deviceId", deviceId);
+    console.log("[Device] Generated new device ID:", deviceId);
+  }
+  return deviceId;
+}
+
+/**
  * Ensures the FCM service worker is registered and active, then returns that
  * registration for getToken(). Without this, getToken() often returns null on
  * localhost until the SW race is resolved.
@@ -28,27 +41,55 @@ async function getFcmServiceWorkerRegistration() {
   }
 }
 
+/**
+ * Request notification permission if not already granted
+ */
+async function requestNotificationPermission() {
+  try {
+    if (!("Notification" in window)) {
+      console.warn("[FCM] Notification API not supported");
+      return false;
+    }
+
+    if (Notification.permission === "granted") {
+      return true;
+    }
+
+    if (Notification.permission === "denied") {
+      console.warn("[FCM] Notification permission previously denied");
+      return false;
+    }
+
+    const permission = await Notification.requestPermission();
+    return permission === "granted";
+  } catch (error) {
+    console.error("[FCM] Error requesting notification permission:", error);
+    return false;
+  }
+}
+
 export const getFCMToken = async () => {
   try {
     const supported = await isSupported();
     if (!supported) {
       console.warn("[FCM] Messaging is not supported in this browser.");
-      return null;
+      console.log("[Device] Falling back to device ID");
+      return generateDeviceId();
     }
 
     if (!messaging) {
       console.error("[FCM] Firebase messaging is null (check firebaseConfig).");
-      return null;
+      return generateDeviceId();
     }
 
-    if (Notification.permission !== "granted") {
-      const permission = await Notification.requestPermission();
-      if (permission !== "granted") {
-        console.warn("[FCM] Notification permission denied.");
-        return null;
-      }
+    // Request notification permission if needed
+    const hasPermission = await requestNotificationPermission();
+    if (!hasPermission) {
+      console.warn("[FCM] Notification permission not granted.");
+      return generateDeviceId();
     }
 
+    // Register service worker
     const serviceWorkerRegistration = await getFcmServiceWorkerRegistration();
 
     const tokenOptions = {
@@ -58,28 +99,37 @@ export const getFCMToken = async () => {
 
     let token = await getToken(messaging, tokenOptions);
 
+    // Retry if token is empty (race condition with SW)
     if (!token && serviceWorkerRegistration) {
-      await new Promise((r) => setTimeout(r, 400));
+      await new Promise((r) => setTimeout(r, 500));
       token = await getToken(messaging, tokenOptions);
     }
 
     if (token) {
       localStorage.setItem("fcmToken", token);
+      console.log("[FCM] Token retrieved successfully");
       return token;
     }
 
-    console.error(
-      "[FCM] getToken returned empty — confirm Web Push key in Firebase Console matches VITE_FIREBASE_VAPID_KEY / VAPID in code.",
+    console.warn(
+      "[FCM] getToken returned empty — using fallback device ID",
     );
-    return null;
+    return generateDeviceId();
   } catch (error) {
-    console.error("[FCM] getFCMToken error:", error?.code, error?.message, error);
-    return null;
+    console.error("[FCM] getFCMToken error:", error?.code, error?.message);
+    console.log("[Device] Falling back to device ID due to error");
+    return generateDeviceId();
   }
 };
 
 export const getStoredFCMToken = () => {
-  return localStorage.getItem("fcmToken");
+  const token = localStorage.getItem("fcmToken");
+  if (token) {
+    console.log("[FCM] Using stored FCM token");
+    return token;
+  }
+  // Return device ID as fallback
+  return generateDeviceId();
 };
 
 export const clearFCMToken = () => {
