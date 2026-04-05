@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Modal,
   Form,
@@ -27,6 +27,14 @@ const LocationMapPicker = ({ onLocationSelect, selectedLocation }) => {
   ); // Default to Karachi
   const [showInfoWindow, setShowInfoWindow] = useState(true);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const mapRef = useRef(null);
+  const geocoderRef = useRef(null);
+  const placesServiceRef = useRef(null);
+  const searchTimeoutRef = useRef(null);
 
   // Get API Key from environment variable
   const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -46,20 +54,120 @@ const LocationMapPicker = ({ onLocationSelect, selectedLocation }) => {
     backgroundColor: "#f5f5f5",
   };
 
+  const libraries = ["places"];
+
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const updateSelectedLocation = (newLocation) => {
+    setLocation(newLocation);
+    onLocationSelect(newLocation);
+    setShowInfoWindow(true);
+
+    if (mapRef.current) {
+      mapRef.current.panTo(newLocation);
+    }
+  };
+
+  const searchLocationByName = (value) => {
+    const trimmedValue = value.trim();
+    setSearchText(value);
+    setSearchError("");
+    setSuggestions([]);
+
+    if (!trimmedValue || trimmedValue.length < 2) {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+      setIsSearching(false);
+      return;
+    }
+
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    searchTimeoutRef.current = setTimeout(() => {
+      if (!geocoderRef.current) {
+        setSearchError("Map search is not ready yet. Please try again.");
+        setIsSearching(false);
+        return;
+      }
+
+      setIsSearching(true);
+      geocoderRef.current.geocode(
+        { address: trimmedValue },
+        (results, status) => {
+          setIsSearching(false);
+
+          if (status === "OK" && results?.length > 0) {
+            // Filter and map results to suggestions
+            const suggestionsList = results
+              .slice(0, 8)
+              .map((result, index) => ({
+                id: index,
+                name: result.formatted_address,
+                placeId: result.place_id,
+                lat: result.geometry.location.lat(),
+                lng: result.geometry.location.lng(),
+              }));
+
+            setSuggestions(suggestionsList);
+            return;
+          }
+
+          if (status === "ZERO_RESULTS") {
+            setSuggestions([]);
+            setSearchError("No matching location found.");
+            return;
+          }
+
+          setSearchError("Unable to search location right now.");
+        },
+      );
+    }, 300);
+  };
+
+  const handleSelectSuggestion = (suggestion) => {
+    const newLocation = {
+      lat: suggestion.lat,
+      lng: suggestion.lng,
+    };
+    updateSelectedLocation(newLocation);
+    setSearchText(suggestion.name);
+    setSuggestions([]);
+  };
+
   const handleMapClick = (e) => {
     console.log("Map clicked at:", e.latLng.lat(), e.latLng.lng());
     const newLocation = {
       lat: e.latLng.lat(),
       lng: e.latLng.lng(),
     };
-    setLocation(newLocation);
-    onLocationSelect(newLocation);
-    setShowInfoWindow(true);
+    updateSelectedLocation(newLocation);
   };
 
-  const handleMapLoad = () => {
+  const handleScriptLoad = () => {
     console.log("Google Map loaded successfully");
     setMapLoaded(true);
+
+    if (window.google?.maps) {
+      geocoderRef.current = new window.google.maps.Geocoder();
+      if (mapRef.current) {
+        placesServiceRef.current = new window.google.maps.places.PlacesService(
+          mapRef.current,
+        );
+      }
+    }
+  };
+
+  const handleMapLoad = (map) => {
+    mapRef.current = map;
   };
 
   if (!hasValidApiKey) {
@@ -137,11 +245,52 @@ const LocationMapPicker = ({ onLocationSelect, selectedLocation }) => {
       <label className="block text-sm font-bold mb-2">
         Select Location on Map
       </label>
-      <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} onLoad={handleMapLoad}>
+      <div className="mb-3 relative">
+        <Input
+          value={searchText}
+          onChange={(e) => searchLocationByName(e.target.value)}
+          placeholder="Search location by name (e.g., Gulshan, Dhaka, Times Square)"
+          className="mli-tall-input"
+          allowClear
+          onFocus={() => suggestions.length > 0 && setSuggestions(suggestions)}
+        />
+        <p className="text-xs text-gray-500 mt-1">
+          Type location name to see suggestions instantly.
+        </p>
+        {isSearching && (
+          <p className="text-xs text-blue-600 mt-1">🔍 Searching location...</p>
+        )}
+        {searchError && (
+          <p className="text-xs text-red-600 mt-1">⚠️ {searchError}</p>
+        )}
+
+        {/* Suggestions Dropdown */}
+        {suggestions.length > 0 && (
+          <div className="absolute top-10 left-0 right-0 bg-white border border-gray-300 rounded shadow-lg z-50 max-h-64 overflow-y-auto">
+            {suggestions.map((suggestion) => (
+              <button
+                key={suggestion.id}
+                onClick={() => handleSelectSuggestion(suggestion)}
+                className="w-full text-left px-3 py-2 hover:bg-gray-100 border-b border-gray-200 last:border-b-0 text-sm truncate transition"
+                type="button"
+              >
+                <span className="text-blue-600 font-medium">📍 </span>
+                {suggestion.name}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      <LoadScript
+        googleMapsApiKey={GOOGLE_MAPS_API_KEY}
+        libraries={libraries}
+        onLoad={handleScriptLoad}
+      >
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
           center={{ lat: location.lat, lng: location.lng }}
           zoom={13}
+          onLoad={handleMapLoad}
           onClick={handleMapClick}
           options={{
             streetViewControl: false,

@@ -51,9 +51,14 @@ const categoryOptions = ["All Categories"];
 const regionOptions = ["All Regions"];
 const CustomerOptions = ["All Customers"];
 const locationOptions = ["All Cities"];
-const subscriptionOptions = ["All Statuses", "Active", "Inactive"];
-const paymentOptions = ["All Payments", "Paid", "Unpaid"];
-const metricOptions = ["Revenue", "Visits", "Points Redeemed", "Points Accumulated"];
+const subscriptionOptions = ["All Status", "Active", "Inactive"];
+const paymentOptions = ["All Payments", "Paid", "Unpaid", "Expired"];
+const metricOptions = [
+  "Revenue",
+  "Visits",
+  "Points Redeemed",
+  "Points Accumulated",
+];
 const pointsFilterOptions = ["All", "Points Redeemed", "Points Accumulated"];
 
 const maxValues = {
@@ -138,7 +143,7 @@ export default function MonthlyStatsChartCustomer() {
   const [selectedCustomer, setSelectedCustomer] = useState("All Customers");
   const [selectedLocation, setSelectedLocation] = useState("All Cities");
   const [selectedSubscription, setSelectedSubscription] =
-    useState("All Statuses");
+    useState("All Status");
   const [selectedPayment, setSelectedPayment] = useState("All Payments");
   const [selectedMetric, setSelectedMetric] = useState("all");
   const [selectedPointsFilter, setSelectedPointsFilter] = useState("All");
@@ -161,7 +166,7 @@ export default function MonthlyStatsChartCustomer() {
     });
   if (toDate)
     queryParams.push({ name: "endDate", value: toDate.format("YYYY-MM-DD") });
-  if (selectedSubscription !== "All Statuses")
+  if (selectedSubscription !== "All Status")
     queryParams.push({
       name: "subscriptionStatus",
       value:
@@ -226,11 +231,6 @@ export default function MonthlyStatsChartCustomer() {
   const transformedData = useMemo(() => {
     if (!reportResponse?.data?.records) return [];
     return reportResponse.data.records.map((item, index) => {
-      // Normalize subscription status from API
-      const normalizedStatus =
-        item.subscriptionStatus?.toLowerCase() === "active"
-          ? "Active"
-          : "Inactive";
       // Calculate serial number based on pagination
       const serialNumber =
         (paginationInfo.current - 1) * paginationInfo.pageSize + index + 1;
@@ -243,10 +243,28 @@ export default function MonthlyStatsChartCustomer() {
         customerName: item.customerName || "-",
         Location: item.location || "-",
         location: item.location || "-",
-        SubscriptionStatus: normalizedStatus,
-        subscriptionStatus: item.subscriptionStatus || "-",
-        PaymentStatus: item.paymentStatus || "-",
-        paymentStatus: item.paymentStatus || "-",
+        subscriptionStatus:
+          item.subscriptionStatus === "active"
+            ? "Active"
+            : item.subscriptionStatus === "inActive"
+              ? "Inactive"
+              : "-",
+        PaymentStatus:
+          item.paymentStatus === "paid"
+            ? "Paid"
+            : item.paymentStatus === "unpaid"
+              ? "Unpaid"
+              : item.paymentStatus === "expired"
+                ? "Expired"
+                : "-",
+        paymentStatus:
+          item.paymentStatus === "paid"
+            ? "Paid"
+            : item.paymentStatus === "unpaid"
+              ? "Unpaid"
+              : item.paymentStatus === "expired"
+                ? "Expired"
+                : "-",
         Revenue: item.revenue || 0,
         revenue: item.revenue || 0,
         "Points Accumulated": item.pointsAccumulated || 0,
@@ -272,7 +290,7 @@ export default function MonthlyStatsChartCustomer() {
           d.CustomerName === selectedCustomer) &&
         (selectedLocation === "All Cities" ||
           d.Location === selectedLocation) &&
-        (selectedSubscription === "All Statuses" ||
+        (selectedSubscription === "All Status" ||
           d.SubscriptionStatus === selectedSubscription) &&
         (selectedPayment === "All Payments" ||
           d.PaymentStatus?.toLowerCase() === selectedPayment.toLowerCase())
@@ -413,15 +431,17 @@ export default function MonthlyStatsChartCustomer() {
       },
       {
         title: "Membership Status",
-        dataIndex: "SubscriptionStatus",
-        key: "SubscriptionStatus",
+        dataIndex: "subscriptionStatus",
+        key: "subscriptionStatus",
         align: "center",
         render: (status) => (
           <span
             className={
-              status === "Active"
-                ? "text-green-600 font-semibold"
-                : "text-red-600 font-semibold"
+              status?.toLowerCase() === "active"
+                ? "text-green-600"
+                : status?.toLowerCase() === "inactive"
+                  ? "text-red-600"
+                  : "text-yellow-500"
             }
           >
             {status}
@@ -437,8 +457,10 @@ export default function MonthlyStatsChartCustomer() {
           <span
             className={
               status?.toLowerCase() === "paid"
-                ? "text-green-600 font-semibold"
-                : "text-red-600 font-semibold"
+                ? "text-green-600"
+                : status?.toLowerCase() === "expired"
+                  ? "text-red-600"
+                  : "text-yellow-500"
             }
           >
             {status}
@@ -722,7 +744,7 @@ export default function MonthlyStatsChartCustomer() {
                       setSelectedRegion("All Regions");
                       setSelectedCustomer("All Customers");
                       setSelectedLocation("All Cities");
-                      setSelectedSubscription("All Statuses");
+                      setSelectedSubscription("All Status");
                       setSelectedPayment("All Payments");
                       setSelectedMetric("all");
                       setSelectedPointsFilter("All");
@@ -797,6 +819,19 @@ export default function MonthlyStatsChartCustomer() {
                   )}
                 />
               )}
+              {(selectedMetric === "all" ||
+                selectedMetric === "Points Accumulated") && (
+                <Bar
+                  dataKey="Points Accumulated"
+                  fill="#ae00ff"
+                  shape={(props) => (
+                    <Custom3DBarWithWatermark
+                      {...props}
+                      dataKey="Points Accumulated"
+                    />
+                  )}
+                />
+              )}
             </BarChart>
           ) : chartType === "Line" ? (
             <LineChart
@@ -821,6 +856,14 @@ export default function MonthlyStatsChartCustomer() {
                   type="monotone"
                   dataKey="Points Redeemed"
                   stroke="#FFAE4C"
+                />
+              )}
+              {(selectedMetric === "all" ||
+                selectedMetric === "Points Accumulated") && (
+                <Line
+                  type="monotone"
+                  dataKey="Points Accumulated"
+                  stroke="#ae00ff"
                 />
               )}
             </LineChart>
@@ -858,6 +901,15 @@ export default function MonthlyStatsChartCustomer() {
                   dataKey="Points Redeemed"
                   stroke="#FFAE4C"
                   fill="#FFAE4C"
+                />
+              )}
+              {(selectedMetric === "all" ||
+                selectedMetric === "Points Accumulated") && (
+                <Area
+                  type="monotone"
+                  dataKey="Points Accumulated"
+                  stroke="#ae00ff"
+                  fill="#ae00ff"
                 />
               )}
             </AreaChart>
