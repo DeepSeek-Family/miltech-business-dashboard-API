@@ -133,7 +133,7 @@ const SellManagement = () => {
   const filteredData = data;
 
   const handleNewSellSubmit = (values) => {
-    message.success("Transaction completed successfully!");
+    // message.success("Transaction completed successfully!");
     setIsNewSellPage(false);
     setEditingRow(null);
     updateURL({ view: "" });

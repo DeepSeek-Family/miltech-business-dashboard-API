@@ -419,6 +419,7 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                   className="mli-tall-input"
                   type="number"
                   min="0"
+                  onWheel={(e) => e.target.blur()}
                   placeholder="Enter total bill amount before applying promotions"
                 />
               </Form.Item>
@@ -463,6 +464,7 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
                   className="mli-tall-input"
                   type="number"
                   min="0"
+                  onWheel={(e) => e.target.blur()}
                   placeholder="Enter points to redeem"
                   disabled={cardCode && cardCode.includes("PC")}
                 />
