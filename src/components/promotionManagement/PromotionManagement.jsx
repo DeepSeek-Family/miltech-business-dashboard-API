@@ -351,10 +351,17 @@ const PromotionManagement = () => {
       align: "center",
       render: (_, record) => {
         const start = record.startDate
-          ? new Date(record.startDate).toLocaleDateString()
+          ? new Date(record.startDate + "T00:00:00").toLocaleDateString(
+              "en-GB",
+              {
+                timeZone: "UTC",
+              },
+            )
           : "-";
         const end = record.endDate
-          ? new Date(record.endDate).toLocaleDateString()
+          ? new Date(record.endDate + "T00:00:00").toLocaleDateString("en-GB", {
+              timeZone: "UTC",
+            })
           : "-";
         return (
           <div className="flex flex-col items-start justify-center gap-1">
