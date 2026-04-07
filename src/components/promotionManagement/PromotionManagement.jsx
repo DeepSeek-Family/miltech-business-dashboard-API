@@ -42,6 +42,23 @@ const getPromotionTypeLabel = (value) => {
   return PROMOTION_TYPE_MAP[value] || value;
 };
 
+const formatPromotionDate = (value) => {
+  if (!value) return "-";
+
+  let date = new Date(value);
+
+  // Fallback for date-only strings or mixed backend formats.
+  if (Number.isNaN(date.getTime()) && typeof value === "string") {
+    date = new Date(`${value.slice(0, 10)}T00:00:00Z`);
+  }
+
+  if (Number.isNaN(date.getTime())) return "-";
+
+  return date.toLocaleDateString("en-GB", {
+    timeZone: "UTC",
+  });
+};
+
 const PromotionManagement = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchText, setSearchText] = useState("");
@@ -350,19 +367,8 @@ const PromotionManagement = () => {
       key: "dateRange",
       align: "center",
       render: (_, record) => {
-        const start = record.startDate
-          ? new Date(record.startDate + "T00:00:00").toLocaleDateString(
-              "en-GB",
-              {
-                timeZone: "UTC",
-              },
-            )
-          : "-";
-        const end = record.endDate
-          ? new Date(record.endDate + "T00:00:00").toLocaleDateString("en-GB", {
-              timeZone: "UTC",
-            })
-          : "-";
+        const start = formatPromotionDate(record.startDate);
+        const end = formatPromotionDate(record.endDate);
         return (
           <div className="flex flex-col items-start justify-center gap-1">
             <p>
