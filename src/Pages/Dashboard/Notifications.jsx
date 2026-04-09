@@ -34,7 +34,7 @@ const Notifications = () => {
       // Refetch notifications to update the UI
       refetch();
     },
-    [refetch]
+    [refetch],
   );
 
   useEffect(() => {
@@ -61,7 +61,7 @@ const Notifications = () => {
       }
     } catch (error) {
       toast.error(
-        error?.data?.message || "Failed to mark notifications as read"
+        error?.data?.message || "Failed to mark notifications as read",
       );
     }
   };
@@ -117,9 +117,10 @@ const Notifications = () => {
                   style={{
                     height: "40px",
                     width: "40px",
-                    // borderRadius: "100%",
-                    // border: "2px solid gray",
+                    borderRadius: "100%",
+                    border: "1px solid #d9d9d9",
                     objectFit: "cover",
+                    padding: "4px",
                   }}
                   src={notificationImg}
                   alt="notification"
@@ -130,7 +131,9 @@ const Notifications = () => {
               </div>
               <div className="flex-1">
                 <p className="font-medium">{notification.title}</p>
-                {/* <p className='text-gray-700 mt-1'>{notification.message}</p> */}
+                <p className="text-gray-400 text-sm mt-1 mb-1">
+                  {notification.body}
+                </p>
                 <p style={{ color: "gray", fontSize: "14px" }}>
                   {notification.timeAgo}
                 </p>

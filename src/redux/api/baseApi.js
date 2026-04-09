@@ -38,7 +38,7 @@ const tokenService = {
 // ---------------------------------------------
 // BASE API SETUP
 // ---------------------------------------------
-// const baseUrl = "http://10.10.7.55:5004/api/v1";
+// const baseUrl = "http://50.6.200.33:5004/api/v1";
 // const baseUrl = "http://31.97.114.108:5004/api/v1";
 const baseUrl = "https://hz2w208g-5004.inc1.devtunnels.ms/api/v1";
 

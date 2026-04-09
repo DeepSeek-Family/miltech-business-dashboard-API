@@ -228,15 +228,20 @@ const CustomerManagement = () => {
       dataIndex: "feedback",
       key: "feedback",
       align: "center",
-      render: (_, record) => (
-        <Tooltip title="Customer Ratings">
-          <Rate
-            disabled
-            value={record.feedback} // assuming rating is a number from 1 to 5
-            style={{ fontSize: 16, color: "#FFD700" }} // optional styling
-          />
-        </Tooltip>
-      ),
+      render: (_, record) => {
+        const rating = Number(record.feedback) || 0;
+
+        return (
+          <Tooltip title={rating.toFixed(1)}>
+            <Rate
+              allowHalf
+              disabled
+              value={rating}
+              style={{ fontSize: 16, color: "#FFD700" }}
+            />
+          </Tooltip>
+        );
+      },
     },
     {
       title: "Action",
