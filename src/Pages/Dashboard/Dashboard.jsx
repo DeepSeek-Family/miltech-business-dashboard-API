@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {  MenuOutlined, SettingOutlined } from "@ant-design/icons";
 import { Button,  Layout, Menu, Select, theme } from "antd";
 import { TfiLayoutSliderAlt } from "react-icons/tfi";
@@ -9,12 +8,10 @@ import { RxDashboard } from "react-icons/rx";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-// import Logo from "../../assets/logo.png"; 
 import { FaRegBell } from "react-icons/fa6";
 import { BiCrown } from "react-icons/bi";
 import { MdOutlineCategory } from "react-icons/md";
 import { MdOutlineEvent } from "react-icons/md";
-// import ImgBaseURL from "../../../ImgBaseURL"; 
 import { useProfileQuery } from "../../redux/apiSlices/authSlice";
 const { Header, Sider, Content } = Layout;
 import { IoIosLogOut } from "react-icons/io";

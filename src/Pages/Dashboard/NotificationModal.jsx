@@ -14,7 +14,7 @@ const NotificationModal = ({ isOpen, onClose }) => {
       title,
       message,
     });
-    onClose(); // Modal বন্ধ করার জন্য
+    onClose();
   };
 
   return (

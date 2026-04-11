@@ -241,19 +241,19 @@ const ShopInfo = () => {
               height: 45,
             }}
           >
-            <Option value="Food & Beverages">Food & Beverages</Option>
+            <Option value="Food and Beverages">Food and Beverages</Option>
             <Option value="Apparel and Footwear">Apparel and Footwear</Option>
             <Option value="Accessories">Accessories</Option>
-            <Option value="Health & Beauty">Health & Beauty</Option>
-            <Option value="Salons & Spas">Salons & Spas</Option>
-            <Option value="Leisure & Entertainment">
-              Leisure & Entertainment
+            <Option value="Health and Beauty">Health and Beauty</Option>
+            <Option value="Salons and Spas">Salons and Spas</Option>
+            <Option value="Leisure and Entertainment">
+              Leisure and Entertainment
             </Option>
-            <Option value="Home & Living">Home & Living</Option>
+            <Option value="Home and Living">Home and Living</Option>
             <Option value="Education">Education</Option>
             <Option value="Electronics">Electronics</Option>
-            <Option value="Toys & Gifts">Toys & Gifts</Option>
-            <Option value="Travel & Tour">Travel & Tour</Option>
+            <Option value="Toys and Gifts">Toys and Gifts</Option>
+            <Option value="Travel and Tour">Travel and Tour</Option>
             <Option value="Other Services">Other Services</Option>
           </Select>
         </Form.Item>

@@ -124,7 +124,7 @@ export default function TierSystem() {
       const payload = {
         name: values.name,
         pointsThreshold: Number(values.threshold) || 0,
-        reward: String(values.reward || ""),
+        reward: String(values.reward || 0),
         accumulationRule: Number(values.lockoutDuration) || 0,
         redemptionRule: 0,
         minTotalSpend: Number(values.minSpend) || 0,
@@ -234,9 +234,9 @@ export default function TierSystem() {
                     <span className="font-semibold">Points Threshold:</span>{" "}
                     {tier.threshold}
                   </p>
-                  <p>
+                  {/* <p>
                     <span className="font-semibold">Reward:</span> {tier.reward}
-                  </p>
+                  </p> */}
                   <p>
                     <span className="font-semibold">Accumulation Rule:</span>{" "}
                     {tier.lockoutDuration}

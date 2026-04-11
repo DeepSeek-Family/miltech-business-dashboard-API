@@ -32,7 +32,7 @@ const EditTierModal = ({
         layout="vertical"
         initialValues={{
           threshold: "",
-          reward: "",
+          reward: 0,
           lockoutDuration: "",
           pointsSystemLockoutDuration: 0,
           minSpend: "",
@@ -83,7 +83,7 @@ const EditTierModal = ({
             min="0"
           />
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           label="Reward"
           name="reward"
           rules={[{ required: true, message: "Please enter reward" }]}
@@ -93,7 +93,7 @@ const EditTierModal = ({
             placeholder="Enter reward"
             className="mli-tall-input"
           />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item
           label="Point accumulation rule (%)"
           name="lockoutDuration"
