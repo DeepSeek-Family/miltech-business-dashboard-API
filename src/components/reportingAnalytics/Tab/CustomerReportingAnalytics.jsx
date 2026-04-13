@@ -241,8 +241,8 @@ export default function MonthlyStatsChartCustomer() {
         customerId: item.customerId || "-",
         CustomerName: item.customerName || "-",
         customerName: item.customerName || "-",
-        Location: item.location || "-",
-        location: item.location || "-",
+        Location: item.city || item.location || "-",
+        location: item.city || item.location || "-",
         subscriptionStatus:
           item.subscriptionStatus === "active"
             ? "Active"
@@ -272,7 +272,7 @@ export default function MonthlyStatsChartCustomer() {
         "Points Redeemed": item.pointsRedeemed || 0,
         pointsRedeemed: item.pointsRedeemed || 0,
         category: "Customer",
-        region: item.location,
+        region: item.city || item.location,
         Visits: item.totalUsers || 0,
         visits: item.totalUsers || 0,
       };
@@ -289,9 +289,9 @@ export default function MonthlyStatsChartCustomer() {
         (selectedCustomer === "All Customers" ||
           d.CustomerName === selectedCustomer) &&
         (selectedLocation === "All Cities" ||
-          d.Location === selectedLocation) &&
+          d.Location?.toLowerCase() === selectedLocation.toLowerCase()) &&
         (selectedSubscription === "All Status" ||
-          d.SubscriptionStatus === selectedSubscription) &&
+          d.subscriptionStatus === selectedSubscription) &&
         (selectedPayment === "All Payments" ||
           d.PaymentStatus?.toLowerCase() === selectedPayment.toLowerCase())
       );
@@ -306,8 +306,9 @@ export default function MonthlyStatsChartCustomer() {
 
   // Generate 12 months of chart data using API monthlyData or calculated data
   const chartData = useMemo(() => {
-    // If monthlyData is available from API, use it
+    // If monthlyData is available from API and no customer filter is applied, use it
     if (
+      selectedCustomer === "All Customers" &&
       reportResponse?.data?.monthlyData &&
       reportResponse.data.monthlyData.length > 0
     ) {
@@ -321,7 +322,7 @@ export default function MonthlyStatsChartCustomer() {
       }));
     }
 
-    // Fallback: Generate from filtered records if API data not available
+    // Fallback: Generate from filtered records when customer filter is applied or API data not available
     const months = [];
     const now = dayjs();
 
@@ -356,7 +357,7 @@ export default function MonthlyStatsChartCustomer() {
     }
 
     return months;
-  }, [reportResponse?.data?.monthlyData, filteredData]);
+  }, [reportResponse?.data?.monthlyData, filteredData, selectedCustomer]);
 
   // Generate dynamic options from transformed data
   const customerOptions = useMemo(() => {
@@ -562,7 +563,7 @@ export default function MonthlyStatsChartCustomer() {
 
             <Col flex="1 1 200px">
               <Form.Item
-                label={<span className="mli-custom-label">Customers Name</span>}
+                label={<span className="mli-custom-label">Customer Name</span>}
                 style={{ marginBottom: "0.5rem" }}
               >
                 <Select

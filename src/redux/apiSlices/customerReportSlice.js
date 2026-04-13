@@ -25,56 +25,22 @@ export const customerReportApi = api.injectEndpoints({
     // EXPORT Report
     // ---------------------------------------
     exportCustomerReport: builder.mutation({
-      queryFn: async (queryParams, { getState }) => {
-        try {
-          const token = localStorage.getItem("token");
-          // const baseUrl = "http://10.10.7.8:5004/api/v1";
-          const baseUrl = "https://44kb593x-5004.inc1.devtunnels.ms/api/v1";
-
-          // Build URL with query parameters
-          const params = new URLSearchParams();
-          if (queryParams && Array.isArray(queryParams)) {
-            queryParams.forEach((param) => {
-              params.append(param.name, param.value);
-            });
-          }
-
-          const url = `/report-analytics/business-customer/export${
-            params.toString() ? "?" + params.toString() : ""
-          }`;
-
-          const response = await fetch(`${baseUrl}${url}`, {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
+      query: (queryParams) => {
+        const params = new URLSearchParams();
+        if (queryParams && Array.isArray(queryParams)) {
+          queryParams.forEach((param) => {
+            params.append(param.name, param.value);
           });
-
-          if (!response.ok) {
-            const errorText = await response.text();
-            console.error("Export API Error:", response.status, errorText);
-            return {
-              error: {
-                status: response.status,
-                data: errorText || "Failed to export report",
-              },
-            };
-          }
-
-          const blob = await response.blob();
-          console.log("Export successful, blob size:", blob.size);
-          return { data: blob };
-        } catch (error) {
-          console.error("Export error:", error);
-          return {
-            error: {
-              status: 500,
-              data: error.message || "Network error occurred",
-            },
-          };
         }
+        return {
+          url: `/report-analytics/merchant/monthly/export${
+            params.toString() ? "?" + params.toString() : ""
+          }`,
+          method: "GET",
+          responseHandler: (response) => response.blob(),
+        };
       },
+      invalidatesTags: ["CustomerReport"],
     }),
   }),
 });

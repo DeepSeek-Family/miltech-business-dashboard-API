@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button, Modal, Input, Tooltip, Table, message } from "antd";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import MarchantIcon from "../../assets/marchant.png";
+import MarchantIcon from "../../assets/image-fallback.jpg";
 import { Rate } from "antd";
 import CustomTable from "../common/CustomTable";
 import DetailsModal from "./components/DetailsModal";

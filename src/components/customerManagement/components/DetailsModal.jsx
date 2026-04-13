@@ -1,11 +1,12 @@
 import { Modal, Table, Spin } from "antd";
 import { useEffect, useState } from "react";
-import MarchantIcon from "../../../assets/marchant.png";
+import MarchantIcon from "../../../assets/image-fallback.jpg";
 import {
   useGetUserTransactionsQuery,
   useGetCustomerTierQuery,
 } from "../../../redux/apiSlices/selleManagementSlice";
 import dayjs from "dayjs";
+import { getImageUrl } from "../../common/imageUrl";
 
 const DetailsModal = ({
   isVisible,
@@ -44,7 +45,7 @@ const DetailsModal = ({
             : "N/A",
           quantity: transaction.pointsEarned || 0,
           amount: transaction.pointRedeemed || 0,
-        })
+        }),
       );
       setTransactionData(formattedTransactions);
     }
@@ -64,7 +65,7 @@ const DetailsModal = ({
           <div>
             <div className="flex flex-row justify-between items-start gap-3 mt-8">
               <img
-                src={MarchantIcon}
+                src={getImageUrl(selectedRecord.image) || MarchantIcon}
                 alt={selectedRecord.name}
                 className="w-214 h-214 rounded-full"
               />

@@ -70,12 +70,13 @@ const SellManagement = () => {
     page: pagination.current,
     limit: pagination.pageSize,
     month: selectedMonth,
+    searchTerm: searchText,
   });
 
-  // Clear data when pagination or month changes
+  // Clear data when pagination, month, or search text changes
   useEffect(() => {
     setData([]);
-  }, [pagination.current, pagination.pageSize, selectedMonth]);
+  }, [pagination.current, pagination.pageSize, selectedMonth, searchText]);
 
   // Update local data when API data changes
   useEffect(() => {
@@ -305,9 +306,19 @@ const SellManagement = () => {
         <div className="flex gap-4">
           <Input
             placeholder="Search by Customer Name or Card ID"
-            style={{ width: 300 }}
             value={searchText}
-            onChange={handleSearchChange}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSearchText(value);
+              setPagination({ current: 1, pageSize: 10 });
+              // Update URL with search term
+              if (value.trim()) {
+                setSearchParams({ searchTerm: value });
+              } else {
+                setSearchParams({});
+              }
+            }}
+            style={{ width: 300 }}
             allowClear
           />
           <Select
@@ -318,6 +329,9 @@ const SellManagement = () => {
             allowClear
             className="text-[14px] h-10"
           >
+            <Option key="all" value="">
+              All Months
+            </Option>
             {Array.from({ length: 12 }, (_, i) => (
               <Option key={i + 1} value={String(i + 1)}>
                 {new Date(0, i).toLocaleString("default", { month: "long" })}

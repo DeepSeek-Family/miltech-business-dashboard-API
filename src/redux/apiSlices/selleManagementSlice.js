@@ -41,11 +41,16 @@ export const selleManagementApi = api.injectEndpoints({
     // GET today's sales/transactions
     // ---------------------------------------
     getTodaysSells: builder.query({
-      query: ({ page = 1, limit = 10, month } = {}) => {
-        const baseUrl = `/sell/merchant?page=${page}&limit=${limit}`;
-        const url = month
-          ? `${baseUrl}&month=${encodeURIComponent(month)}`
-          : baseUrl;
+      query: ({ page = 1, limit = 10, month = "", searchTerm = "" } = {}) => {
+        let url = `/sell/merchant?page=${page}&limit=${limit}`;
+
+        if (month) {
+          url += `&month=${encodeURIComponent(month)}`;
+        }
+
+        if (searchTerm) {
+          url += `&searchTerm=${encodeURIComponent(searchTerm)}`;
+        }
 
         return {
           url,
