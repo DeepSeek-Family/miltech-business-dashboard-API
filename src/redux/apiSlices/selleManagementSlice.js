@@ -59,6 +59,7 @@ export const selleManagementApi = api.injectEndpoints({
       },
       transformResponse: (response) => response,
       providesTags: ["sellManagement"],
+      refetchOnMountOrArgChange: true,
     }),
 
     // ---------------------------------------

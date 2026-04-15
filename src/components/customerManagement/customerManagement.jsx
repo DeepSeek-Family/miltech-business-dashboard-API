@@ -85,7 +85,7 @@ const CustomerManagement = () => {
         location: item.country || "-",
         sales: item.totalBilled || 0,
         salesRep: item.salesRep || "-",
-        status: item.status || "Pending",
+        status: item.status || "Completed",
         feedback: item.rating || 0,
         ratingComment: item.ratingComment || "",
         pointsRedeemed: item.totalPointsRedeemed || 0,

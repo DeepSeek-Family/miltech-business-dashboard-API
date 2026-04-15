@@ -73,16 +73,15 @@ const SellManagement = () => {
     searchTerm: searchText,
   });
 
-  // Clear data when pagination, month, or search text changes
-  useEffect(() => {
-    setData([]);
-  }, [pagination.current, pagination.pageSize, selectedMonth, searchText]);
-
   // Update local data when API data changes
   useEffect(() => {
-    if (apiData?.data && Array.isArray(apiData.data)) {
-      const formattedData = apiData.data.map((item) => ({
-        id: item._id || Math.random().toString(),
+    if (
+      apiData?.data &&
+      Array.isArray(apiData.data) &&
+      apiData.data.length > 0
+    ) {
+      const formattedData = apiData.data.map((item, index) => ({
+        id: item._id || `${item.phone}-${Date.now()}-${index}`,
         customerName: item.name || "-",
         email: item.email || "-",
         phone: item.phone || "-",
@@ -96,26 +95,23 @@ const SellManagement = () => {
         date: item.date || new Date().toISOString().split("T")[0],
       }));
       setData(formattedData);
+    } else {
+      setData([]);
     }
   }, [apiData]);
-
-  // Remove client-side month filtering since API already filters by month
-  useEffect(() => {
-    // Reset search when month changes to avoid confusion
-    if (selectedMonth) {
-      // No need to clear, data is already handled above
-    }
-  }, [selectedMonth]);
 
   const handleMonthChange = (month) => {
     setSelectedMonth(month || "");
     setPagination({ current: 1, pageSize: pagination.pageSize });
+    setData([]); // Clear data immediately
     updateURL({ month: month || "", page: 1 });
   };
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchText(value);
+    setPagination({ current: 1, pageSize: pagination.pageSize });
+    setData([]); // Clear data immediately before API call
     updateURL({ searchTerm: value, page: 1 });
   };
 
@@ -307,16 +303,15 @@ const SellManagement = () => {
           <Input
             placeholder="Search by Customer Name or Card ID"
             value={searchText}
-            onChange={(e) => {
-              const value = e.target.value;
-              setSearchText(value);
-              setPagination({ current: 1, pageSize: 10 });
-              // Update URL with search term
-              if (value.trim()) {
-                setSearchParams({ searchTerm: value });
-              } else {
-                setSearchParams({});
-              }
+            onChange={handleSearchChange}
+            onClear={() => {
+              setSearchText("");
+              setPagination({ current: 1, pageSize: pagination.pageSize });
+              setData([]); // Clear data immediately
+              const newParams = new URLSearchParams(searchParams);
+              newParams.delete("searchTerm");
+              newParams.set("page", 1);
+              setSearchParams(newParams);
             }}
             style={{ width: 300 }}
             allowClear
