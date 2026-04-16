@@ -65,7 +65,7 @@ const DetailsModal = ({
           <div>
             <div className="flex flex-row justify-between items-start gap-3 mt-8">
               <img
-                src={selectedRecord?.image}
+                src={getImageUrl(selectedRecord.image || MarchantIcon)}
                 alt={selectedRecord.name}
                 style={{
                   width: "168px",
