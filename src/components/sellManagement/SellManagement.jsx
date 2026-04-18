@@ -66,6 +66,7 @@ const SellManagement = () => {
     data: apiData,
     isLoading,
     isFetching,
+    refetch,
   } = useGetTodaysSellsQuery({
     page: pagination.current,
     limit: pagination.pageSize,
@@ -134,7 +135,10 @@ const SellManagement = () => {
     setIsNewSellPage(false);
     setEditingRow(null);
     updateURL({ view: "" });
-    // Data will be refreshed automatically when component re-fetches from API
+    // Clear data immediately before refetch to prevent duplicates
+    setData([]);
+    // Refetch the data to show updated table without duplication
+    refetch();
   };
 
   const handleEdit = (record) => {
@@ -147,6 +151,9 @@ const SellManagement = () => {
     setIsNewSellPage(false);
     setEditingRow(null);
     updateURL({ view: "" });
+    // Clear data and refetch to ensure fresh data when returning
+    setData([]);
+    refetch();
   };
 
   const handleDelete = (id) => {
@@ -289,6 +296,7 @@ const SellManagement = () => {
         onBack={handleBackFromNewSell}
         onSubmit={handleNewSellSubmit} // Pass the function as a prop
         editingRow={editingRow} // Pass the editing row data
+        refetch={refetch} // Pass refetch function to refresh data after creation
       />
     );
   }

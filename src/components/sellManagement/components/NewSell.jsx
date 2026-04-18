@@ -20,7 +20,7 @@ import {
 
 const { Option } = Select;
 
-const NewSell = ({ onBack, onSubmit, editingRow }) => {
+const NewSell = ({ onBack, onSubmit, editingRow, refetch }) => {
   const [form] = Form.useForm();
   const [cardCode, setCardCode] = React.useState("");
   const [selectedPromotions, setSelectedPromotions] = React.useState([]);
@@ -290,7 +290,13 @@ const NewSell = ({ onBack, onSubmit, editingRow }) => {
         setSelectedPromotions([]);
         setDigitalCardData(null);
         setApprovalResponse(null);
-        // Call parent callback
+        
+        // Refetch data to ensure fresh data is loaded
+        if (refetch) {
+          await refetch();
+        }
+        
+        // Call parent callback after refetch completes
         onSubmit(result.data);
       }
     } catch (error) {
