@@ -290,12 +290,12 @@ const NewSell = ({ onBack, onSubmit, editingRow, refetch }) => {
         setSelectedPromotions([]);
         setDigitalCardData(null);
         setApprovalResponse(null);
-        
+
         // Refetch data to ensure fresh data is loaded
         if (refetch) {
           await refetch();
         }
-        
+
         // Call parent callback after refetch completes
         onSubmit(result.data);
       }

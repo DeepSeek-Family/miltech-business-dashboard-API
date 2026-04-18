@@ -100,9 +100,13 @@ const DetailsModal = ({
                 </p>
                 <p>
                   <strong>Points Balance:</strong>{" "}
-                  {tierData?.availablePoints ||
-                    selectedRecord.availablePoints ||
-                    "N/A"}
+                  {(tierData?.availablePoints ??
+                  selectedRecord?.availablePoints)
+                    ? (
+                        tierData?.availablePoints ??
+                        selectedRecord?.availablePoints
+                      ).toFixed(2)
+                    : "N/A"}
                 </p>
                 <p>
                   <strong>Tier:</strong>{" "}
