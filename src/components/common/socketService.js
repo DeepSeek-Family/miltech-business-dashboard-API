@@ -75,10 +75,8 @@ class SocketService {
     }
     this.socket.emit(event, data);
   }
-
-  // ✅ FIXED: userId ছাড়া শুধু 'newNotification' listen করবে
   subscribeToUserNotifications(callback) {
-    const event = "newNotification"; // userId বাদ দিয়েছি
+    const event = "newNotification";
     console.log("🎯 Subscribing to:", event);
     this.on(event, callback);
   }

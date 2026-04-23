@@ -199,7 +199,7 @@ export default function TierSystem() {
         <div>
           <h1 className="text-[24px] font-bold">Point & Tier System</h1>
           <p className="text-[16px] font-normal mt-2">
-            Configure your tiers, rewards, and point accumulation rules.
+            Configure your tiers and point accumulation rules.
           </p>
         </div>
         <Button
