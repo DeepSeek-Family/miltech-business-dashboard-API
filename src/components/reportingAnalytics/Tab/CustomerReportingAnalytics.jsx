@@ -166,6 +166,11 @@ export default function MonthlyStatsChartCustomer() {
     });
   if (toDate)
     queryParams.push({ name: "endDate", value: toDate.format("YYYY-MM-DD") });
+  if (selectedCustomer !== "All Customers")
+    queryParams.push({
+      name: "customerName",
+      value: selectedCustomer,
+    });
   if (selectedSubscription !== "All Status")
     queryParams.push({
       name: "subscriptionStatus",
@@ -304,11 +309,10 @@ export default function MonthlyStatsChartCustomer() {
     transformedData,
   ]);
 
-  // Generate 12 months of chart data using API monthlyData or calculated data
+  // Generate 12 months of chart data using API monthlyData
   const chartData = useMemo(() => {
-    // If monthlyData is available from API and no customer filter is applied, use it
+    // Use monthlyData from API whenever available (with or without customer filter)
     if (
-      selectedCustomer === "All Customers" &&
       reportResponse?.data?.monthlyData &&
       reportResponse.data.monthlyData.length > 0
     ) {
@@ -317,12 +321,12 @@ export default function MonthlyStatsChartCustomer() {
         fullDate: `${item.year}-${String(item.month).padStart(2, "0")}`,
         Revenue: Math.round(item.totalRevenue || 0),
         Visits: Math.round(item.totalUsers || 0),
-        "Points Redeemed": Math.round(item.totalPointsRedeemed || 0),
-        "Points Accumulated": Math.round(item.totalPointsAccumulated || 0),
+        "Points Redeemed": parseFloat((item.totalPointsRedeemed || 0).toFixed(2)),
+        "Points Accumulated": parseFloat((item.totalPointsAccumulated || 0).toFixed(2)),
       }));
     }
 
-    // Fallback: Generate from filtered records when customer filter is applied or API data not available
+    // Fallback: Generate from filtered records when API data not available
     const months = [];
     const now = dayjs();
 
@@ -351,13 +355,13 @@ export default function MonthlyStatsChartCustomer() {
         fullDate: date.format("YYYY-MM-DD"),
         Revenue: Math.round(sumRevenue),
         Visits: Math.round(sumVisits),
-        "Points Redeemed": Math.round(sumPointsRedeemed),
-        "Points Accumulated": Math.round(sumPointsAccumulated),
+        "Points Redeemed": parseFloat(sumPointsRedeemed.toFixed(2)),
+        "Points Accumulated": parseFloat(sumPointsAccumulated.toFixed(2)),
       });
     }
 
     return months;
-  }, [reportResponse?.data?.monthlyData, filteredData, selectedCustomer]);
+  }, [reportResponse?.data?.monthlyData, filteredData]);
 
   // Generate dynamic options from transformed data
   const customerOptions = useMemo(() => {
