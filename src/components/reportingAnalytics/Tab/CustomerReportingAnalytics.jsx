@@ -413,13 +413,13 @@ export default function MonthlyStatsChartCustomer() {
         render: (date) => (date ? dayjs(date).format("DD/MM/YYYY HH:mm") : "-"),
       },
       {
-        title: "Business ID",
+        title: "Customer ID",
         dataIndex: "customerId",
         key: "customerId",
         align: "center",
       },
       {
-        title: "Business Name",
+        title: "Customer Name",
         dataIndex: "CustomerName",
         key: "CustomerName",
         align: "center",

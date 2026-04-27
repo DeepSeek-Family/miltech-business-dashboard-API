@@ -33,7 +33,7 @@ export const customerReportApi = api.injectEndpoints({
           });
         }
         return {
-          url: `/report-analytics/merchant/monthly/export${
+          url: `/report-analytics/business-customer/export${
             params.toString() ? "?" + params.toString() : ""
           }`,
           method: "GET",
