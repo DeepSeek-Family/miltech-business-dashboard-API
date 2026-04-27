@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import {
   Select,
   Input,
@@ -16,10 +17,12 @@ import CustomTable from "../common/CustomTable";
 import dayjs from "dayjs";
 import { useGetTodaysSellsQuery } from "../../redux/apiSlices/selleManagementSlice";
 import { useUser } from "../../provider/User";
+import { api } from "../../redux/api/baseApi";
 
 const { Option } = Select;
 
 const SellManagement = () => {
+  const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCards, setSelectedCards] = useState([]);
   const [data, setData] = useState([]);
@@ -130,15 +133,35 @@ const SellManagement = () => {
 
   const filteredData = data;
 
-  const handleNewSellSubmit = (values) => {
-    // message.success("Transaction completed successfully!");
-    setIsNewSellPage(false);
+  const handleNewSellSubmit = async (values) => {
     setEditingRow(null);
-    updateURL({ view: "" });
-    // Clear data immediately before refetch to prevent duplicates
-    setData([]);
-    // Refetch the data to show updated table without duplication
-    refetch();
+    // Reset pagination to first page
+    setPagination({ current: 1, pageSize: 10 });
+
+    // Remove view, page, and limit from URL - keep only search and month if they exist
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete("view");
+    newParams.delete("page");
+    newParams.delete("limit");
+    setSearchParams(newParams);
+    setIsNewSellPage(false);
+
+    try {
+      // Clear the entire API cache first
+      dispatch(api.util.resetApiState());
+
+      // Small delay to ensure cache is cleared
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Now refetch - will get fresh data from API
+      const result = await refetch();
+
+      // The useEffect will automatically update the table with new data
+      message.success("Transaction completed and data refreshed!");
+    } catch (error) {
+      console.error("Refetch error:", error);
+      message.error("Failed to refresh data");
+    }
   };
 
   const handleEdit = (record) => {

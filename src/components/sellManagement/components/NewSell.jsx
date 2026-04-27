@@ -73,7 +73,9 @@ const NewSell = ({ onBack, onSubmit, editingRow, refetch }) => {
       if (result?.success && result?.data?.digitalCard) {
         setDigitalCardData(result.data.digitalCard);
         form.setFieldsValue({
-          pointEarned: result.data.digitalCard.availablePoints || 0,
+          pointEarned: parseFloat(
+            result.data.digitalCard.availablePoints || 0,
+          ).toFixed(2),
         });
         message.success("Card found successfully");
       }
@@ -209,7 +211,9 @@ const NewSell = ({ onBack, onSubmit, editingRow, refetch }) => {
       if (result?.success && result?.data?.digitalCard) {
         setDigitalCardData(result.data.digitalCard);
         form.setFieldsValue({
-          pointEarned: result.data.digitalCard.availablePoints || 0,
+          pointEarned: parseFloat(
+            result.data.digitalCard.availablePoints || 0,
+          ).toFixed(2),
         });
         message.success("Card found successfully");
       }
@@ -291,13 +295,10 @@ const NewSell = ({ onBack, onSubmit, editingRow, refetch }) => {
         setDigitalCardData(null);
         setApprovalResponse(null);
 
-        // Refetch data to ensure fresh data is loaded
-        if (refetch) {
-          await refetch();
+        // Call parent callback - let parent handle refetch and cache clearing
+        if (onSubmit) {
+          await onSubmit(result.data);
         }
-
-        // Call parent callback after refetch completes
-        onSubmit(result.data);
       }
     } catch (error) {
       message.error(error?.data?.message || "Failed to complete transaction");
@@ -395,6 +396,8 @@ const NewSell = ({ onBack, onSubmit, editingRow, refetch }) => {
                   placeholder="Available points will be shown here after finding the card"
                   disabled
                   style={{ backgroundColor: "#f1f1f1" }}
+                  type="number"
+                  step="0.01"
                 />
               </Form.Item>
               <Form.Item
