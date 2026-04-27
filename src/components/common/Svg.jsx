@@ -55,8 +55,7 @@ const Marchant = () => {
   );
 };
 
-// New svg component
-const People = () => {
+const People = ({ ...props }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -64,6 +63,7 @@ const People = () => {
       height="25"
       viewBox="0 0 24 25"
       fill="none"
+      {...props}
     >
       <path
         fill-rule="evenodd"
@@ -300,7 +300,7 @@ const loginCredentials = () => {
   );
 };
 
-const Rewords = () => {
+const Rewords = ({ ...props }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -308,6 +308,7 @@ const Rewords = () => {
       height="25"
       viewBox="0 0 24 25"
       fill="none"
+      {...props}
     >
       <g clip-path="url(#clip0_676_1236)">
         <path
@@ -477,7 +478,7 @@ const Pending = () => {
   );
 };
 
-const Sales = () => {
+const Sales = ({ ...props }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -485,6 +486,7 @@ const Sales = () => {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
+      {...props}
     >
       <path
         d="M17.85 22.5H6.15002C3.67502 22.5 1.65002 20.475 1.65002 18V17.85L2.10002 5.85C2.17502 3.375 4.20002 1.5 6.60002 1.5H17.4C19.8 1.5 21.825 3.375 21.9 5.85L22.35 17.85C22.425 19.05 21.975 20.175 21.15 21.075C20.325 21.975 19.2 22.5 18 22.5H17.85ZM6.60002 3C4.95002 3 3.67502 4.275 3.60002 5.85L3.15002 18C3.15002 19.65 4.50002 21 6.15002 21H18C18.825 21 19.575 20.625 20.1 20.025C20.625 19.425 20.925 18.675 20.925 17.85L20.475 5.85C20.4 4.2 19.125 3 17.475 3H6.60002Z"
@@ -740,7 +742,7 @@ const Filter = () => {
   );
 };
 
-const Points = () => {
+const Points = ({ ...props }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -748,6 +750,7 @@ const Points = () => {
       height="25"
       viewBox="0 0 24 25"
       fill="none"
+      {...props}
     >
       <path
         fill-rule="evenodd"

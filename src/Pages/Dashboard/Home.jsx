@@ -120,48 +120,60 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="bg-white border border-primary rounded-lg flex items-center justify-start p-6">
+          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-3">
+            <div className="bg-white border border-primary rounded-lg flex items-center justify-start py-2 px-4 2xl:py-4 2xl:px-6">
               <div className="flex flex-col items-baseline">
                 <h2 className="text-[16px] font-semibold mb-1">Total Sales</h2>
-                <h3 className="text-secondary text-[24px] font-semibold flex items-center gap-3">
-                  <Sales className="w-[20px] h-[20px] text-secondary" />
+                <h3 className="text-secondary text-[22px] font-semibold flex items-center gap-2">
+                  <Sales
+                    className="text-secondary"
+                    style={{ width: "20px", height: "20px" }}
+                  />
                   {response?.data?.totalSales || 0}
                 </h3>
               </div>
             </div>
 
-            <div className="bg-white border border-primary rounded-lg flex items-center justify-start p-6">
+            <div className="bg-white border border-primary rounded-lg flex items-center justify-start py-2 px-4 2xl:py-4 2xl:px-6">
               <div className="flex flex-col items-baseline">
                 <h2 className="text-[16px] font-semibold mb-1">
                   Total Members
                 </h2>
-                <h3 className="text-secondary text-[24px] font-semibold flex items-center gap-3">
-                  <People className="w-[20px] h-[20px] text-secondary" />
+                <h3 className="text-secondary text-[22px] font-semibold flex items-center gap-2">
+                  <People
+                    className="text-secondary"
+                    style={{ width: "20px", height: "20px" }}
+                  />
                   {response?.data?.totalMembers || 0}
                 </h3>
               </div>
             </div>
 
-            <div className="bg-white border border-primary rounded-lg flex items-center justify-start p-6">
+            <div className="bg-white border border-primary rounded-lg flex items-center justify-start py-2 px-4 2xl:py-4 2xl:px-6">
               <div className="flex flex-col items-baseline">
                 <h2 className="text-[16px] font-semibold mb-1">
                   Total Points Issued
                 </h2>
-                <h3 className="text-secondary text-[24px] font-semibold flex items-center gap-3">
-                  <Points className="w-[20px] h-[20px] text-secondary" />
+                <h3 className="text-secondary text-[22px] font-semibold flex items-center gap-2">
+                  <Points
+                    className="text-secondary"
+                    style={{ width: "20px", height: "20px" }}
+                  />
                   {(response?.data?.totalPointsIssued || 0).toFixed(2)}
                 </h3>
               </div>
             </div>
 
-            <div className="bg-white border border-primary rounded-lg flex items-center justify-start p-6">
+            <div className="bg-white border border-primary rounded-lg flex items-center justify-start py-2 px-4 2xl:py-4 2xl:px-6">
               <div className="flex flex-col items-baseline">
                 <h2 className="text-[16px] font-semibold mb-1">
                   Rewards Redeemed
                 </h2>
-                <h3 className="text-secondary text-[24px] font-semibold flex items-center gap-3">
-                  <Rewords className="w-[20px] h-[20px] text-secondary" />
+                <h3 className="text-secondary text-[22px] font-semibold flex items-center gap-2">
+                  <Rewords
+                    className="text-secondary"
+                    style={{ width: "20px", height: "20px" }}
+                  />
                   {response?.data?.rewardsRedeemed || 0}
                 </h3>
               </div>
