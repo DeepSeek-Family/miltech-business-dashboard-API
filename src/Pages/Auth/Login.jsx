@@ -1,15 +1,18 @@
 import { Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import FormItem from "../../components/common/FormItem";
 import image4 from "../../assets/image4.png";
 import { useLoginMutation } from "../../redux/apiSlices/authSlice";
 import { useUser } from "../../provider/User";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { getFCMToken, getStoredFCMToken } from "../../utils/fcmService";
+import { api } from "../../redux/api/baseApi";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { refetch } = useUser();
   const [login, { isLoading }] = useLoginMutation();
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -17,6 +20,9 @@ const Login = () => {
   const handleGoogleSuccess = async (credentialResponse) => {
     setGoogleLoading(true);
     try {
+      // Clear previous user's Redux cache
+      dispatch(api.util.resetApiState());
+
       let fcmToken = await getFCMToken();
       if (!fcmToken) {
         fcmToken = getStoredFCMToken();
@@ -96,6 +102,9 @@ const Login = () => {
 
   const onFinish = async (values) => {
     console.log("📝 Login started...");
+
+    // Clear previous user's Redux cache
+    dispatch(api.util.resetApiState());
 
     // Get FCM token
     console.log("🔄 Getting FCM token...");

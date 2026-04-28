@@ -22,6 +22,25 @@ export const customerReportApi = api.injectEndpoints({
       providesTags: ["CustomerReport"],
     }),
     // ---------------------------------------
+    // GET Customer Name List for Filter
+    // ---------------------------------------
+    getCustomerNameList: builder.query({
+      query: (args) => {
+        const params = new URLSearchParams();
+        if (args) {
+          args.forEach((arg) => {
+            params.append(arg.name, arg.value);
+          });
+        }
+        return {
+          url: `/report-analytics/business-customer?${params.toString()}`,
+          method: "GET",
+        };
+      },
+      transformResponse: (response) => response,
+      providesTags: ["CustomerReport"],
+    }),
+    // ---------------------------------------
     // EXPORT Report
     // ---------------------------------------
     exportCustomerReport: builder.mutation({
@@ -45,5 +64,8 @@ export const customerReportApi = api.injectEndpoints({
   }),
 });
 
-export const { useGetCustomerReportQuery, useExportCustomerReportMutation } =
-  customerReportApi;
+export const {
+  useGetCustomerReportQuery,
+  useExportCustomerReportMutation,
+  useGetCustomerNameListQuery,
+} = customerReportApi;

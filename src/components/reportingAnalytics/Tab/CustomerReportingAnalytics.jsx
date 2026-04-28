@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   useGetCustomerReportQuery,
   useExportCustomerReportMutation,
+  useGetCustomerNameListQuery,
 } from "../../../redux/apiSlices/customerReportSlice";
 import {
   Area,
@@ -157,6 +158,17 @@ export default function MonthlyStatsChartCustomer() {
   const [exportReport, { isLoading: isExporting }] =
     useExportCustomerReportMutation();
 
+  // Query params for customer name list (all customers with high limit)
+  const customerNameListParams = [
+    { name: "page", value: 1 },
+    { name: "limit", value: 10000 },
+  ];
+
+  // Fetch all customer names for dropdown
+  const { data: customerNameListResponse } = useGetCustomerNameListQuery(
+    customerNameListParams,
+  );
+
   // Build query parameters
   const queryParams = [];
   if (fromDate)
@@ -232,6 +244,18 @@ export default function MonthlyStatsChartCustomer() {
     setPagination({ current: page, pageSize });
   };
 
+  // Reset pagination to 1 when filters change
+  useEffect(() => {
+    setPagination({ current: 1, pageSize: 10 });
+  }, [
+    selectedCustomer,
+    selectedLocation,
+    selectedSubscription,
+    selectedPayment,
+    fromDate,
+    toDate,
+  ]);
+
   // Transform API data to match table format
   const transformedData = useMemo(() => {
     if (!reportResponse?.data?.records) return [];
@@ -272,8 +296,10 @@ export default function MonthlyStatsChartCustomer() {
                 : "-",
         Revenue: item.revenue || 0,
         revenue: item.revenue || 0,
-        "Points Accumulated": item.pointsAccumulated || 0,
-        pointsAccumulated: item.pointsAccumulated || 0,
+        "Points Accumulated": parseFloat(
+          (item.pointsAccumulated || 0).toFixed(2),
+        ),
+        pointsAccumulated: parseFloat((item.pointsAccumulated || 0).toFixed(2)),
         "Points Redeemed": item.pointsRedeemed || 0,
         pointsRedeemed: item.pointsRedeemed || 0,
         category: "Customer",
@@ -321,8 +347,12 @@ export default function MonthlyStatsChartCustomer() {
         fullDate: `${item.year}-${String(item.month).padStart(2, "0")}`,
         Revenue: Math.round(item.totalRevenue || 0),
         Visits: Math.round(item.totalUsers || 0),
-        "Points Redeemed": parseFloat((item.totalPointsRedeemed || 0).toFixed(2)),
-        "Points Accumulated": parseFloat((item.totalPointsAccumulated || 0).toFixed(2)),
+        "Points Redeemed": parseFloat(
+          (item.totalPointsRedeemed || 0).toFixed(2),
+        ),
+        "Points Accumulated": parseFloat(
+          (item.totalPointsAccumulated || 0).toFixed(2),
+        ),
       }));
     }
 
@@ -363,11 +393,21 @@ export default function MonthlyStatsChartCustomer() {
     return months;
   }, [reportResponse?.data?.monthlyData, filteredData]);
 
-  // Generate dynamic options from transformed data
+  // Generate dynamic options from customer name list API
   const customerOptions = useMemo(() => {
-    const customers = new Set(transformedData.map((d) => d.CustomerName));
-    return ["All Customers", ...Array.from(customers)];
-  }, [transformedData]);
+    if (
+      customerNameListResponse?.data?.records &&
+      Array.isArray(customerNameListResponse.data.records)
+    ) {
+      const customers = new Set(
+        customerNameListResponse.data.records
+          .map((d) => d.customerName)
+          .filter(Boolean),
+      );
+      return ["All Customers", ...Array.from(customers).sort()];
+    }
+    return ["All Customers"];
+  }, [customerNameListResponse]);
 
   const cityList = [
     "Abu Dhabi",
@@ -503,6 +543,7 @@ export default function MonthlyStatsChartCustomer() {
         dataIndex: "Points Accumulated",
         key: "Points Accumulated",
         align: "center",
+        render: (value) => `${parseFloat(value || 0).toFixed(2)}`,
       });
     }
 

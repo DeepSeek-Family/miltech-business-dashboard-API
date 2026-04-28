@@ -3,15 +3,18 @@ import { useCallback, useEffect, useState } from "react";
 import { FaRegBell } from "react-icons/fa6";
 import { Menu as MenuIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { getImageUrl } from "../../components/common/imageUrl";
 import { useUser } from "../../provider/User";
 import { useGetUnreadCountQuery } from "../../redux/apiSlices/notificationSlice";
 import socketService from "../../components/common/socketService";
+import { api } from "../../redux/api/baseApi";
 
 const Header = ({ toggleSidebar, isMobile }) => {
   const { user } = useUser();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Get unread notification count
   const { data: notificationData, refetch: refetchNotifications } =
@@ -44,7 +47,11 @@ const Header = ({ toggleSidebar, isMobile }) => {
   };
 
   const handleLogout = () => {
+    // Clear Redux cache to remove previous user's data
+    dispatch(api.util.resetApiState());
+    
     localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
     setIsLogoutModalOpen(false);
     navigate("/auth/login");
   };
