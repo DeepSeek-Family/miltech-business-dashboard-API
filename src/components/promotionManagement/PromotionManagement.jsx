@@ -160,12 +160,10 @@ const PromotionManagement = () => {
           newCampaign.customerSegment?.toLowerCase().replace(/\s+/g, "_") ||
           "all_customer",
         startDate: newCampaign.startDate
-          ? new Date(newCampaign.startDate).toISOString()
+          ? `${newCampaign.startDate}T00:00:00Z`
           : null,
         endDate: newCampaign.endDate
-          ? new Date(
-              new Date(newCampaign.endDate).setHours(23, 59, 59, 999),
-            ).toISOString()
+          ? `${newCampaign.endDate}T00:00:00Z`
           : null,
         availableDays: isAllDays ? ["all"] : promotionDays,
         grossValue: Number(newCampaign.grossValue) || 1,
@@ -223,12 +221,10 @@ const PromotionManagement = () => {
           updatedCampaign.customerSegment?.toLowerCase().replace(/\s+/g, "_") ||
           "all_customer",
         startDate: updatedCampaign.startDate
-          ? new Date(updatedCampaign.startDate).toISOString()
+          ? `${updatedCampaign.startDate}T00:00:00Z`
           : null,
         endDate: updatedCampaign.endDate
-          ? new Date(
-              new Date(updatedCampaign.endDate).setHours(23, 59, 59, 999),
-            ).toISOString()
+          ? `${updatedCampaign.endDate}T00:00:00Z`
           : null,
         availableDays: isAllDays ? ["all"] : promotionDays,
         grossValue: Number(updatedCampaign.grossValue) || 0,

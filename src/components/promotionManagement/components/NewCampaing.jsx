@@ -53,9 +53,19 @@ const NewCampaign = ({ onSave, onCancel, editData = null, isEdit = false }) => {
 
       setCheckAll(isAllDays || initialDays.length === daysOptions.length);
 
+      // Parse dates the same way as table (extract date part and treat as UTC)
+      const parseUTCDate = (dateString) => {
+        if (!dateString) return null;
+        const datePart = dateString.slice(0, 10); // Extract YYYY-MM-DD
+        return dayjs(`${datePart}T00:00:00Z`);
+      };
+
       const dateRange =
         editData.startDate && editData.endDate
-          ? [dayjs(editData.startDate), dayjs(editData.endDate)]
+          ? [
+              parseUTCDate(editData.startDate),
+              parseUTCDate(editData.endDate),
+            ]
           : null;
 
       // Set existing image if available
