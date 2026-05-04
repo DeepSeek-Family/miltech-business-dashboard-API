@@ -24,6 +24,23 @@ const getPromotionTypeLabel = (value) => {
   return PROMOTION_TYPE_MAP[value] || value;
 };
 
+const formatPromotionDate = (value) => {
+  if (!value) return "-";
+
+  let date = new Date(value);
+
+  // Fallback for date-only strings or mixed backend formats.
+  if (Number.isNaN(date.getTime()) && typeof value === "string") {
+    date = new Date(`${value.slice(0, 10)}T00:00:00Z`);
+  }
+
+  if (Number.isNaN(date.getTime())) return "-";
+
+  return date.toLocaleDateString("en-GB", {
+    timeZone: "UTC",
+  });
+};
+
 const DetailsModal = ({ visible, onCancel, record }) => {
   if (!record) {
     return null;
@@ -74,13 +91,11 @@ const DetailsModal = ({ visible, onCancel, record }) => {
           </Descriptions.Item>
 
           <Descriptions.Item label="Start Date">
-            {raw?.startDate
-              ? new Date(raw.startDate).toLocaleDateString()
-              : "-"}
+            {formatPromotionDate(raw?.startDate)}
           </Descriptions.Item>
 
           <Descriptions.Item label="End Date">
-            {raw?.endDate ? new Date(raw.endDate).toLocaleDateString() : "-"}
+            {formatPromotionDate(raw?.endDate)}
           </Descriptions.Item>
 
           <Descriptions.Item label="Available Days" span={2}>
